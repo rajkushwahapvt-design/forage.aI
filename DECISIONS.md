@@ -1,6 +1,7 @@
 # Architecture & Technical Decisions (DECISIONS.md)
 
 **Project:** AI Builds My Website  
+**GitHub Repository:** [https://github.com/rajkushwahapvt-design/forage.aI](https://github.com/rajkushwahapvt-design/forage.aI)  
 **Candidate Submission for:** Full Stack Development Internship at Websites.co.in  
 **Stack:** Laravel 11, MySQL, Google Gemini 1.5 Flash / Pro, Tailwind CSS  
 

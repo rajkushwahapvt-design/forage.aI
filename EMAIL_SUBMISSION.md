@@ -14,7 +14,7 @@ I have completed the "AI Builds My Website" assignment using Laravel 11, MySQL, 
 ---
 
 ### Key Submission Links:
-- **GitHub Repository:** `https://github.com/[YOUR_GITHUB_USERNAME]/ai-builds-my-website`
+- **GitHub Repository:** `https://github.com/rajkushwahapvt-design/forage.aI`
 - **5-Minute Demo Video:** `https://youtu.be/[YOUR_DEMO_VIDEO_LINK]` *(Building sites for Sharma & Sons Artisan Bakery and Apex Plumbing & HVAC Solutions)*
 - **DECISIONS.md:** Available in the repo root detailing key choices, scope boundaries, and the production roadmap.
 
