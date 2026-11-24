@@ -136,22 +136,6 @@ composer install
 php artisan key:generate
 ```
 
-### 3. Configure `.env`
-Edit `.env` to configure your MySQL connection and optional Gemini API Key:
-```ini
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=ai_website_builder
-DB_USERNAME=root
-DB_PASSWORD=
-
-# Get a free Gemini key at: https://aistudio.google.com/app/apikey
-GEMINI_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=gemini-1.5-flash
-```
-*(Note: If no API key is provided, the application runs seamlessly using the built-in `TemplateFallbackGenerator`.)*
-
 ### 4. Run Migrations & Storage Link
 ```bash
 php artisan migrate
