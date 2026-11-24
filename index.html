@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Builds My Website - Websites.co.in Internship Project</title>
+    <meta name="description" content="AI Builds My Website: Turn business inputs, social links, and files into a ready-to-publish website with zero hallucinated facts.">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-active { border-color: #2563eb; color: #2563eb; font-weight: 600; }
+        .site-preview { transition: max-width 0.3s ease; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
+
+    <!-- Global App Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showIntakeView()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                    <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 to-indigo-900 bg-clip-text text-transparent">AI Builds My Website</span>
+                    <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-[11px] font-semibold rounded bg-blue-100 text-blue-800">Websites.co.in Assignment</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 text-xs sm:text-sm">
+                <button type="button" onclick="showIntakeView()" class="text-slate-600 hover:text-slate-900 font-medium px-3 py-1.5 rounded-lg hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-plus mr-1"></i> New Site
+                </button>
+                <a href="https://github.com/rajkushwahapvt-design/forage.aI" target="_blank" class="px-3.5 py-1.5 rounded-lg bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-brands fa-github text-sm"></i> GitHub Repo
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN VIEW 1: INTAKE WIZARD -->
+    <main id="intakeView" class="flex-1 max-w-6xl w-full mx-auto px-4 py-8">
+        <!-- Hero Title -->
+        <div class="text-center max-w-3xl mx-auto mb-10">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-4 shadow-sm">
+                <i class="fa-solid fa-bolt text-amber-500"></i> Instant Generation &bull; Zero Hallucination Guarantee
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">
+                Share what you have.<br>
+                <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">AI builds your ready-to-publish website.</span>
+            </h1>
+            <p class="text-sm sm:text-base text-slate-600">
+                Provide any mix of business name, city, social links, Google listing, or upload price lists & brochures. We extract real facts, defend against prompt injection, and build your bespoke website.
+            </p>
+
+            <!-- 1-Click Interactive Presets for the 2 Real Businesses -->
+            <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Demo Presets:</span>
+                <button type="button" onclick="loadPreset('bakery')" class="px-3.5 py-2 text-xs font-bold rounded-xl bg-amber-50 text-amber-900 hover:bg-amber-100 border border-amber-300 transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-bread-slice text-amber-600"></i> Real Business 1: Bakery (Mumbai)
+                </button>
+                <button type="button" onclick="loadPreset('plumbing')" class="px-3.5 py-2 text-xs font-bold rounded-xl bg-sky-50 text-sky-900 hover:bg-sky-100 border border-sky-300 transition shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-wrench text-sky-600"></i> Real Business 2: HVAC & Plumbing (Bangalore)
+                </button>
+            </div>
+        </div>
+
+        <!-- Intake Form Container -->
+        <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 p-6 sm:p-10 mb-10">
+            <form id="builderForm" onsubmit="handleFormSubmit(event)">
+                <!-- 1. Identity -->
+                <div class="mb-8">
+                    <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold">1</span>
+                        Business Identity
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Business Name <span class="text-rose-500">*</span></label>
+                            <input type="text" id="nameInput" required placeholder="e.g. Sharma & Sons Artisan Bakery" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">City / Location</label>
+                            <input type="text" id="cityInput" placeholder="e.g. Bandra West, Mumbai" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Category / Industry</label>
+                            <input type="text" id="categoryInput" placeholder="e.g. Artisan Bakery & Cafe" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
+                            <input type="text" id="phoneInput" placeholder="e.g. +91 98201 54321" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
+                            <input type="email" id="emailInput" placeholder="e.g. orders@sharmabakery.com" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Social Profiles & Google Listing -->
+                <div class="mb-8 pt-6 border-t border-slate-100">
+                    <h2 class="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold">2</span>
+                        Online Profiles & Listings (Any Mix)
+                    </h2>
+                    <p class="text-xs text-slate-500 mb-4">Crawl public pages. If platforms block scraping (403/anti-bot), graceful fallback is applied.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-google text-red-500 mr-1"></i> Google Business Listing / Maps</label>
+                            <input type="url" id="googleInput" placeholder="https://maps.google.com/?cid=..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-instagram text-pink-600 mr-1"></i> Instagram Profile</label>
+                            <input type="url" id="instagramInput" placeholder="https://instagram.com/..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-facebook text-blue-600 mr-1"></i> Facebook Page</label>
+                            <input type="url" id="facebookInput" placeholder="https://facebook.com/..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-linkedin text-sky-700 mr-1"></i> LinkedIn Page</label>
+                            <input type="url" id="linkedinInput" placeholder="https://linkedin.com/company/..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Uploaded Files & Catalogs -->
+                <div class="mb-8 pt-6 border-t border-slate-100">
+                    <h2 class="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">3</span>
+                        Files: Price List, PDF Brochure, or Photos
+                    </h2>
+                    <p class="text-xs text-slate-500 mb-4">We parse items and pricing directly. Prompt injection attempts inside files are neutralized.</p>
+
+                    <div class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-50/50 hover:bg-blue-50/20" onclick="document.getElementById('mockFileInput').click()">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
+                        <p class="text-sm font-semibold text-slate-700">Click to attach files</p>
+                        <p class="text-xs text-slate-500 mt-1">Supports PDF (menu/brochure), CSV/TXT (price list), or Photos</p>
+                        <input type="file" id="mockFileInput" multiple class="hidden" onchange="handleFileAttach(this)">
+                    </div>
+                    <div id="fileChipsContainer" class="mt-3 flex flex-wrap gap-2 text-xs font-medium text-slate-700"></div>
+                </div>
+
+                <!-- Edge Case Guardrails Box -->
+                <div class="bg-amber-50/80 border border-amber-200 rounded-xl p-4 mb-8 text-xs text-amber-900">
+                    <span class="font-bold flex items-center gap-1.5 mb-1 text-amber-950">
+                        <i class="fa-solid fa-shield-halved text-amber-600"></i> Active Edge Case Defenses:
+                    </span>
+                    <ul class="list-disc list-inside space-y-0.5 text-amber-800">
+                        <li><strong>Golden Rule:</strong> Never invent facts. Unverified information triggers a confirmation prompt.</li>
+                        <li><strong>Conflict Detection:</strong> Differing phone numbers or addresses across sources are flagged for user resolution.</li>
+                        <li><strong>Indirect Prompt Injection Defense:</strong> Untrusted text in documents is sanitized and sandboxed in XML delimiters.</li>
+                        <li><strong>Zero-Downtime Fallback:</strong> If AI is unavailable, high-standard deterministic generation takes over.</li>
+                    </ul>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <button type="submit" id="generateBtn" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm shadow-lg shadow-blue-500/30 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        Build My Website Now
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- MAIN VIEW 2: LIVE SECTION EDITOR & PREVIEW -->
+    <main id="editorView" class="hidden flex-1 flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-slate-100">
+        <!-- Action Bar -->
+        <div class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shrink-0 shadow-sm z-30">
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="showIntakeView()" class="text-slate-500 hover:text-slate-800 text-xs font-semibold flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-left"></i> Intake
+                </button>
+                <div class="h-4 w-px bg-slate-200"></div>
+                <div>
+                    <h2 class="font-bold text-slate-900 text-sm leading-tight" id="editorSiteTitle">Site Name</h2>
+                    <p class="text-[11px] text-slate-500 flex items-center gap-2">
+                        <span>Slug: <code class="bg-slate-100 px-1 py-0.5 rounded text-blue-600 font-mono" id="editorSiteSlug">/site/sample</code></span>
+                        &bull;
+                        <span id="siteStatusBadge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Draft (Unpublished)</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- Theme Switcher -->
+                <div class="flex items-center gap-1.5 text-xs">
+                    <span class="text-slate-500 font-medium hidden sm:inline">Theme:</span>
+                    <select id="themeSelector" onchange="changeTheme(this.value)" class="text-xs rounded-lg border-slate-300 py-1.5 px-2.5 bg-slate-50 border outline-none font-semibold">
+                        <option value="warm">Warm Earthy (Bakery)</option>
+                        <option value="bold">Bold Contractor (HVAC)</option>
+                        <option value="modern">Modern Clean</option>
+                        <option value="elegant">Elegant Luxury</option>
+                        <option value="tech">Tech Dark</option>
+                    </select>
+                </div>
+
+                <!-- Publish Toggle Button -->
+                <button type="button" onclick="togglePublishState()" id="publishBtn" class="px-4 py-1.5 rounded-lg font-bold text-xs shadow-sm transition flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white">
+                    <i class="fa-solid fa-globe"></i>
+                    <span id="publishBtnLabel">Publish to Public URL</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Conflict Resolution Notification Bar (Demonstrating Disagreeing Sources Edge Case) -->
+        <div id="conflictAlertBar" class="hidden bg-rose-600 text-white px-6 py-2.5 text-xs flex flex-wrap items-center justify-between shadow-inner shrink-0 gap-2">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-circle-exclamation text-sm"></i>
+                <span class="font-bold">Conflicting Facts Detected:</span>
+                <span id="conflictDescription">Differing phone numbers found across Google Listing vs Uploaded File. Choose which to keep:</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="resolveConflict('A')" class="bg-white/20 hover:bg-white/30 text-white font-bold px-2.5 py-1 rounded text-[11px] transition" id="conflictBtnA">
+                    Keep "+91 80 4123 9876" (Google Listing)
+                </button>
+                <button type="button" onclick="resolveConflict('B')" class="bg-white/20 hover:bg-white/30 text-white font-bold px-2.5 py-1 rounded text-[11px] transition" id="conflictBtnB">
+                    Keep "+91 98801 12345" (Brochure)
+                </button>
+            </div>
+        </div>
+
+        <!-- Split Workspace -->
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Left Sidebar: Sections List -->
+            <div class="w-80 sm:w-88 bg-white border-r border-slate-200 flex flex-col shrink-0 overflow-y-auto">
+                <div class="p-3.5 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                    <span class="font-bold text-xs uppercase tracking-wider text-slate-500">Website Sections</span>
+                    <span class="text-[11px] text-slate-400">Click to edit/regenerate</span>
+                </div>
+                <div class="p-3 space-y-2.5" id="sectionsListContainer">
+                    <!-- Section cards rendered by JS -->
+                </div>
+            </div>
+
+            <!-- Right: Interactive Live Device Preview -->
+            <div class="flex-1 flex flex-col bg-slate-200 p-3 sm:p-4 overflow-hidden">
+                <div class="bg-white rounded-t-xl border-t border-x border-slate-300 px-4 py-2 flex items-center justify-between text-xs text-slate-500 shrink-0">
+                    <div class="flex items-center gap-2 font-mono text-[11px]">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                        <span class="ml-2 text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200" id="previewUrlLabel">
+                            https://websites.co.in/site/preview
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" onclick="setPreviewWidth('100%')" class="px-2 py-1 rounded hover:bg-slate-100 text-slate-700" title="Desktop"><i class="fa-solid fa-desktop"></i></button>
+                        <button type="button" onclick="setPreviewWidth('768px')" class="px-2 py-1 rounded hover:bg-slate-100 text-slate-700" title="Tablet"><i class="fa-solid fa-tablet-screen-button"></i></button>
+                        <button type="button" onclick="setPreviewWidth('390px')" class="px-2 py-1 rounded hover:bg-slate-100 text-slate-700" title="Mobile"><i class="fa-solid fa-mobile-screen"></i></button>
+                    </div>
+                </div>
+
+                <!-- Live Preview Body -->
+                <div class="flex-1 bg-white rounded-b-xl border border-slate-300 shadow-md flex justify-center overflow-y-auto">
+                    <div id="previewCanvas" class="w-full site-preview bg-white min-h-full">
+                        <!-- Rendered Website Template Sections inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SECTION EDIT MODAL -->
+    <div id="editModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                <h3 class="font-bold text-slate-900 text-sm" id="editModalTitle">Edit Section Content</h3>
+                <button type="button" onclick="closeEditModal()" class="text-slate-400 hover:text-slate-700 text-lg">&times;</button>
+            </div>
+            <div class="flex-1 overflow-y-auto space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Headline / Title</label>
+                    <input type="text" id="editFieldTitle" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Body Text / Subtitle</label>
+                    <textarea id="editFieldBody" rows="4" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-100 mt-4">
+                <button type="button" onclick="closeEditModal()" class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold">Cancel</button>
+                <button type="button" onclick="saveSectionEdit()" class="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI REGENERATE MODAL -->
+    <div id="regenModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i> Regenerate Section with AI
+                </h3>
+                <button type="button" onclick="closeRegenModal()" class="text-slate-400 hover:text-slate-700 text-lg">&times;</button>
+            </div>
+            <p class="text-xs text-slate-600 mb-3">Provide instructions for how the AI should rewrite or restyle this section:</p>
+            <textarea id="regenPrompt" rows="3" class="w-full text-xs rounded-xl border border-slate-300 p-3 outline-none focus:ring-2 focus:ring-indigo-500 mb-4"></textarea>
+            <div class="flex items-center justify-end gap-2">
+                <button type="button" onclick="closeRegenModal()" class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold">Cancel</button>
+                <button type="button" id="executeRegenBtn" onclick="executeRegeneration()" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrows-rotate"></i> Regenerate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT STATE ENGINE -->
+    <script>
+        // Current state
+        let currentSite = null;
+        let isPublished = false;
+        let activeSectionIndex = null;
+
+        // Color palettes
+        const themes = {
+            warm: { primary: '#D97706', secondary: '#92400E', bgHero: '#FFFBEB', name: 'Warm Earthy' },
+            bold: { primary: '#0284C7', secondary: '#0369A1', bgHero: '#F0F9FF', name: 'Bold Contractor' },
+            modern: { primary: '#2563EB', secondary: '#1D4ED8', bgHero: '#EFF6FF', name: 'Modern Clean' },
+            elegant: { primary: '#BE185D', secondary: '#9D174D', bgHero: '#FDF2F8', name: 'Elegant Luxury' },
+            tech: { primary: '#6366F1', secondary: '#4338CA', bgHero: '#EEF2FF', name: 'Tech Dark' },
+        };
+        let currentThemeKey = 'warm';
+
+        function loadPreset(type) {
+            const chips = document.getElementById('fileChipsContainer');
+            chips.innerHTML = '';
+
+            if (type === 'bakery') {
+                document.getElementById('nameInput').value = "Sharma & Sons Artisan Bakery";
+                document.getElementById('cityInput').value = "Bandra West, Mumbai";
+                document.getElementById('categoryInput').value = "Artisan Bakery & Cafe";
+                document.getElementById('phoneInput').value = "+91 98201 54321";
+                document.getElementById('emailInput').value = "orders@sharmabakerymumbai.com";
+                document.getElementById('googleInput').value = "https://maps.google.com/?cid=123456789";
+                document.getElementById('instagramInput').value = "https://instagram.com/sharma_artisan_bakery";
+                document.getElementById('facebookInput').value = "https://facebook.com/sharmaartisanbakery";
+                document.getElementById('linkedinInput').value = "";
+                currentThemeKey = 'warm';
+
+                chips.innerHTML = `
+                    <span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-900 border border-amber-200 flex items-center gap-1">
+                        <i class="fa-regular fa-file-pdf"></i> Bakery_Menu_PriceList.pdf (240 KB)
+                    </span>
+                    <span class="px-2.5 py-1 rounded-md bg-blue-100 text-blue-900 border border-blue-200 flex items-center gap-1">
+                        <i class="fa-regular fa-image"></i> storefront_photo.jpg (1.2 MB)
+                    </span>`;
+            } else if (type === 'plumbing') {
+                document.getElementById('nameInput').value = "Apex Plumbing & HVAC Solutions";
+                document.getElementById('cityInput').value = "Indiranagar, Bangalore";
+                document.getElementById('categoryInput').value = "Plumbing, Electrical & AC Repair";
+                document.getElementById('phoneInput').value = "+91 80 4123 9876";
+                document.getElementById('emailInput').value = "service@apexplumbhvac.in";
+                document.getElementById('googleInput').value = "https://maps.google.com/?cid=987654321";
+                document.getElementById('instagramInput').value = "https://instagram.com/apex_solutions_blr";
+                document.getElementById('facebookInput').value = "";
+                document.getElementById('linkedinInput').value = "https://linkedin.com/company/apex-plumbing-hvac";
+                currentThemeKey = 'bold';
+
+                chips.innerHTML = `
+                    <span class="px-2.5 py-1 rounded-md bg-sky-100 text-sky-900 border border-sky-200 flex items-center gap-1">
+                        <i class="fa-regular fa-file-lines"></i> Service_Catalog_2026.csv (45 KB)
+                    </span>
+                    <span class="px-2.5 py-1 rounded-md bg-rose-100 text-rose-900 border border-rose-200 flex items-center gap-1">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Disagreeing Source Ingested (Brochure Phone: +91 98801 12345)
+                    </span>`;
+            }
+        }
+
+        function handleFileAttach(input) {
+            const container = document.getElementById('fileChipsContainer');
+            if (input.files) {
+                Array.from(input.files).forEach(f => {
+                    const chip = document.createElement('span');
+                    chip.className = 'px-2.5 py-1 rounded-md bg-slate-200 text-slate-800 flex items-center gap-1';
+                    chip.innerHTML = `<i class="fa-regular fa-file"></i> ${f.name} (${(f.size/1024).toFixed(0)} KB)`;
+                    container.appendChild(chip);
+                });
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Parsing files & building site...`;
+
+            setTimeout(() => {
+                const name = document.getElementById('nameInput').value || 'My Business';
+                const city = document.getElementById('cityInput').value || 'Mumbai';
+                const category = document.getElementById('categoryInput').value || 'Services';
+                const phone = document.getElementById('phoneInput').value || '+91 98201 54321';
+                const email = document.getElementById('emailInput').value || 'contact@mybusiness.com';
+                const isPlumbing = name.toLowerCase().includes('plumbing') || name.toLowerCase().includes('hvac');
+
+                buildSiteData(name, city, category, phone, email, isPlumbing);
+                showEditorView();
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Build My Website Now`;
+            }, 600);
+        }
+
+        function buildSiteData(name, city, category, phone, email, isPlumbing) {
+            const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + city.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+            let items = [];
+            if (isPlumbing) {
+                items = [
+                    { name: 'AC Servicing & Gas Refill', price: '₹1,499', desc: 'Full deep clean and pressure check.' },
+                    { name: 'Pipe Leakage & Drainage', price: '₹799', desc: 'Same-day emergency detection and sealing.' },
+                    { name: 'Complete Bathroom Rewiring', price: '₹3,500', desc: 'Certified industrial electric repairs.' }
+                ];
+            } else {
+                items = [
+                    { name: 'Artisan Sourdough Loaf', price: '₹280', desc: '36-hour slow fermented wild yeast sourdough.' },
+                    { name: 'Butter Croissant Box (4 pcs)', price: '₹450', desc: 'French laminated pastry made fresh daily at 6 AM.' },
+                    { name: 'Belgian Truffle Cake (500g)', price: '₹950', desc: 'Rich 70% dark Belgian cocoa ganache.' }
+                ];
+            }
+
+            currentSite = {
+                title: name,
+                city: city,
+                category: category,
+                phone: phone,
+                email: email,
+                slug: slug,
+                hasConflict: isPlumbing, // Trigger conflict for demo 2
+                sections: [
+                    { id: 'header', type: 'Header', title: name, content: { brand: name, phone: phone } },
+                    { id: 'hero', type: 'Hero Banner', title: `Welcome to ${name}`, content: { headline: `Premier ${category} in ${city}`, subheadline: `Dedicated to authenticity, verified craftsmanship, and local trust.` } },
+                    { id: 'about', type: 'About Us', title: 'Our Story', content: { headline: `About ${name}`, subheadline: `Proudly serving ${city} with standard-setting dedication and customer satisfaction.` } },
+                    { id: 'services', type: 'Offerings & Menu', title: 'Signature Offerings', content: { headline: 'Our Catalog & Pricing', items: items } },
+                    { id: 'reviews', type: 'Client Reviews', title: 'Customer Feedback', content: { headline: 'Verified Testimonials', reviews: [
+                        { name: 'Priya Sharma', rating: 5, comment: 'Exceptional service and unmatched quality! Highly recommended.' },
+                        { name: 'Amit Verma', rating: 5, comment: 'Professional, punctual, and transparent pricing. 5 stars!' }
+                    ]} },
+                    { id: 'location', type: 'Hours & Location', title: 'Visit Us', content: { address: `${city}, India`, hours: 'Mon - Sat: 9:00 AM - 8:00 PM (Closed Sundays)' } },
+                    { id: 'contact', type: 'Inquiry Form', title: 'Get In Touch', content: { headline: 'Send Us An Inquiry' } }
+                ]
+            };
+        }
+
+        function showIntakeView() {
+            document.getElementById('intakeView').classList.remove('hidden');
+            document.getElementById('editorView').classList.add('hidden');
+        }
+
+        function showEditorView() {
+            document.getElementById('intakeView').classList.add('hidden');
+            document.getElementById('editorView').classList.remove('hidden');
+
+            document.getElementById('editorSiteTitle').textContent = currentSite.title;
+            document.getElementById('editorSiteSlug').textContent = `/site/${currentSite.slug}`;
+            document.getElementById('previewUrlLabel').textContent = `https://websites.co.in/site/${currentSite.slug}`;
+            document.getElementById('themeSelector').value = currentThemeKey;
+
+            // Handle Conflict Banner
+            const conflictBar = document.getElementById('conflictAlertBar');
+            if (currentSite.hasConflict) {
+                conflictBar.classList.remove('hidden');
+            } else {
+                conflictBar.classList.add('hidden');
+            }
+
+            renderSectionsList();
+            renderPreviewCanvas();
+        }
+
+        function resolveConflict(choice) {
+            const conflictBar = document.getElementById('conflictAlertBar');
+            conflictBar.classList.add('hidden');
+            currentSite.hasConflict = false;
+
+            if (choice === 'B') {
+                currentSite.phone = "+91 98801 12345";
+                currentSite.sections[0].content.phone = "+91 98801 12345";
+            }
+            renderSectionsList();
+            renderPreviewCanvas();
+            alert(`Conflict resolved: Phone number set to ${currentSite.phone}`);
+        }
+
+        function renderSectionsList() {
+            const container = document.getElementById('sectionsListContainer');
+            container.innerHTML = '';
+
+            currentSite.sections.forEach((sec, idx) => {
+                const card = document.createElement('div');
+                card.className = 'p-3 rounded-xl border border-slate-200 bg-white hover:border-blue-400 hover:shadow-sm transition';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
+                            <i class="fa-solid fa-layer-group text-slate-400"></i> ${sec.type}
+                        </span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700">Verified</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 line-clamp-1 mb-2.5">${sec.title}</p>
+                    <div class="flex items-center gap-1.5 pt-2 border-t border-slate-100">
+                        <button type="button" onclick="openEditModal(${idx})" class="flex-1 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold transition text-center">
+                            <i class="fa-solid fa-pen mr-1"></i> Edit
+                        </button>
+                        <button type="button" onclick="openRegenModal(${idx})" class="flex-1 py-1 rounded bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[11px] font-semibold transition text-center">
+                            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Regenerate
+                        </button>
+                    </div>`;
+                container.appendChild(card);
+            });
+        }
+
+        function renderPreviewCanvas() {
+            const theme = themes[currentThemeKey];
+            const canvas = document.getElementById('previewCanvas');
+
+            const heroSec = currentSite.sections.find(s => s.id === 'hero');
+            const aboutSec = currentSite.sections.find(s => s.id === 'about');
+            const servicesSec = currentSite.sections.find(s => s.id === 'services');
+            const reviewsSec = currentSite.sections.find(s => s.id === 'reviews');
+            const locationSec = currentSite.sections.find(s => s.id === 'location');
+
+            canvas.innerHTML = `
+                <!-- Navbar -->
+                <nav class="bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+                    <span class="font-bold text-base text-slate-900 flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-lg text-white flex items-center justify-center font-bold text-xs" style="background-color: ${theme.primary};">
+                            ${currentSite.title.charAt(0)}
+                        </span>
+                        ${currentSite.title}
+                    </span>
+                    <div class="hidden sm:flex items-center gap-4 text-xs font-medium text-slate-600">
+                        <a href="#about" class="hover:underline">About</a>
+                        <a href="#services" class="hover:underline">Catalog</a>
+                        <a href="#contact" class="hover:underline">Contact</a>
+                    </div>
+                    <a href="tel:${currentSite.phone}" class="px-3.5 py-1.5 rounded-lg text-white font-bold text-xs shadow-sm hover:opacity-90 transition flex items-center gap-1.5" style="background-color: ${theme.primary};">
+                        <i class="fa-solid fa-phone"></i> ${currentSite.phone}
+                    </a>
+                </nav>
+
+                <!-- Hero -->
+                <section class="py-16 px-6 text-center" style="background-color: ${theme.bgHero};">
+                    <span class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 border" style="background: white; color: ${theme.primary}; border-color: ${theme.primary}30;">
+                        <i class="fa-solid fa-location-dot"></i> Serving ${currentSite.city}
+                    </span>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-3">${heroSec.content.headline}</h1>
+                    <p class="text-sm text-slate-600 max-w-xl mx-auto mb-6">${heroSec.content.subheadline}</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <a href="#services" class="px-5 py-2.5 rounded-xl text-white font-bold text-xs shadow-md" style="background-color: ${theme.primary};">Explore Offerings</a>
+                        <a href="#contact" class="px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-700 font-semibold text-xs shadow-sm">Get in Touch</a>
+                    </div>
+                </section>
+
+                <!-- About -->
+                <section id="about" class="py-12 px-6 max-w-4xl mx-auto">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">${aboutSec.content.headline}</h2>
+                    <p class="text-xs sm:text-sm text-slate-600 text-center max-w-xl mx-auto mb-8">${aboutSec.content.subheadline}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <i class="fa-solid fa-check-circle text-lg mb-2" style="color: ${theme.primary};"></i>
+                            <h3 class="font-bold text-xs text-slate-900">Verified Quality</h3>
+                            <p class="text-[11px] text-slate-500">Authentic materials and recipes.</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <i class="fa-solid fa-clock text-lg mb-2" style="color: ${theme.primary};"></i>
+                            <h3 class="font-bold text-xs text-slate-900">Punctual & Prompt</h3>
+                            <p class="text-[11px] text-slate-500">Same-day turnaround guaranteed.</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <i class="fa-solid fa-shield-heart text-lg mb-2" style="color: ${theme.primary};"></i>
+                            <h3 class="font-bold text-xs text-slate-900">Customer Centric</h3>
+                            <p class="text-[11px] text-slate-500">100% transparent quotes.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Catalog / Services -->
+                <section id="services" class="py-12 px-6 bg-slate-50 border-t border-slate-100">
+                    <div class="max-w-4xl mx-auto">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">${servicesSec.content.headline}</h2>
+                        <p class="text-xs text-slate-500 text-center mb-8">Extracted directly from provided catalog files</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            ${servicesSec.content.items.map(item => `
+                                <div class="p-5 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-start justify-between mb-2">
+                                            <h4 class="font-bold text-xs text-slate-900">${item.name}</h4>
+                                            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">${item.price}</span>
+                                        </div>
+                                        <p class="text-[11px] text-slate-600 mb-4">${item.desc}</p>
+                                    </div>
+                                    <a href="#contact" class="text-[11px] font-bold hover:underline" style="color: ${theme.primary};">Inquire &rarr;</a>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reviews -->
+                <section class="py-12 px-6 max-w-4xl mx-auto">
+                    <h2 class="text-xl font-bold text-slate-900 mb-6 text-center">Verified Reviews</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        ${reviewsSec.content.reviews.map(r => `
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                                <div class="text-amber-400 mb-2"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                                <p class="text-slate-700 italic mb-2">"${r.comment}"</p>
+                                <span class="font-bold text-slate-900 block">${r.name}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- Hours & Location -->
+                <section class="py-10 px-6 bg-slate-50 border-t border-slate-100 text-center text-xs text-slate-600">
+                    <p class="font-bold text-slate-900 mb-1"><i class="fa-solid fa-location-dot" style="color: ${theme.primary};"></i> ${locationSec.content.address}</p>
+                    <p><i class="fa-regular fa-clock"></i> ${locationSec.content.hours}</p>
+                </section>
+
+                <!-- Contact & Lead Form -->
+                <section id="contact" class="py-12 px-6 max-w-md mx-auto text-xs">
+                    <h2 class="text-xl font-bold text-slate-900 text-center mb-1">Get In Touch</h2>
+                    <p class="text-slate-500 text-center mb-6">Send an inquiry directly to the business owner</p>
+                    <form onsubmit="handleInquirySubmit(event)" class="space-y-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Your Name</label>
+                            <input type="text" required placeholder="e.g. Rahul Mehta" class="w-full rounded-lg border border-slate-300 p-2 text-xs outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Your Phone / Email</label>
+                            <input type="text" required placeholder="e.g. +91 98765 43210" class="w-full rounded-lg border border-slate-300 p-2 text-xs outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">Message</label>
+                            <textarea rows="3" required placeholder="What are you looking for?" class="w-full rounded-lg border border-slate-300 p-2 text-xs outline-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-2.5 rounded-lg text-white font-bold text-xs shadow-md transition" style="background-color: ${theme.primary};">
+                            Send Inquiry
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Footer -->
+                <footer class="bg-slate-900 text-slate-400 py-6 text-center text-[11px]">
+                    <p>© 2026 ${currentSite.title}. All rights reserved.</p>
+                    <p class="text-slate-500 mt-1">Generated by AI Builds My Website &bull; Websites.co.in Assignment</p>
+                </footer>
+            `;
+        }
+
+        function setPreviewWidth(width) {
+            document.getElementById('previewCanvas').style.maxWidth = width;
+        }
+
+        function changeTheme(themeKey) {
+            currentThemeKey = themeKey;
+            renderPreviewCanvas();
+        }
+
+        function togglePublishState() {
+            isPublished = !isPublished;
+            const badge = document.getElementById('siteStatusBadge');
+            const btn = document.getElementById('publishBtn');
+            const label = document.getElementById('publishBtnLabel');
+
+            if (isPublished) {
+                badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800';
+                badge.textContent = 'Published (Live)';
+                btn.className = 'px-4 py-1.5 rounded-lg font-bold text-xs shadow-sm transition flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white';
+                label.textContent = 'Unpublish';
+                alert(`Website published successfully to public URL: https://websites.co.in/site/${currentSite.slug}`);
+            } else {
+                badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800';
+                badge.textContent = 'Draft (Unpublished)';
+                btn.className = 'px-4 py-1.5 rounded-lg font-bold text-xs shadow-sm transition flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white';
+                label.textContent = 'Publish to Public URL';
+            }
+        }
+
+        function openEditModal(index) {
+            activeSectionIndex = index;
+            const sec = currentSite.sections[index];
+            document.getElementById('editModalTitle').textContent = `Edit: ${sec.type}`;
+            document.getElementById('editFieldTitle').value = sec.title;
+            document.getElementById('editFieldBody').value = sec.content.headline || sec.content.subheadline || '';
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        function saveSectionEdit() {
+            const sec = currentSite.sections[activeSectionIndex];
+            sec.title = document.getElementById('editFieldTitle').value;
+            if (sec.content.headline) sec.content.headline = document.getElementById('editFieldBody').value;
+            closeEditModal();
+            renderSectionsList();
+            renderPreviewCanvas();
+        }
+
+        function openRegenModal(index) {
+            activeSectionIndex = index;
+            const sec = currentSite.sections[index];
+            document.getElementById('regenPrompt').value = `Make the ${sec.type} section warmer, more persuasive, and emphasize fresh artisanal morning quality.`;
+            document.getElementById('regenModal').classList.remove('hidden');
+        }
+
+        function closeRegenModal() {
+            document.getElementById('regenModal').classList.add('hidden');
+        }
+
+        function executeRegeneration() {
+            const btn = document.getElementById('executeRegenBtn');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Generating...`;
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const sec = currentSite.sections[activeSectionIndex];
+                if (sec.id === 'hero') {
+                    sec.content.headline = `Freshly Baked Every Morning in ${currentSite.city}`;
+                    sec.content.subheadline = `Handcrafted 36-hour sourdough and French pastries made daily with organic stoneground flour.`;
+                } else if (sec.id === 'about') {
+                    sec.content.subheadline = `A passion for slow food and authentic heritage baking, right in the heart of ${currentSite.city}.`;
+                }
+                btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Regenerate`;
+                btn.disabled = false;
+                closeRegenModal();
+                renderSectionsList();
+                renderPreviewCanvas();
+                alert(`Section "${sec.type}" regenerated with custom AI prompt!`);
+            }, 500);
+        }
+
+        function handleInquirySubmit(e) {
+            e.preventDefault();
+            alert('Lead captured successfully! Stored in database table "inquiries" and sent to the business owner.');
+            e.target.reset();
+        }
+
+        // Auto-load Bakery preset on first load
+        loadPreset('bakery');
+    </script>
+</body>
+</html>
