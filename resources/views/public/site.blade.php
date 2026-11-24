@@ -330,5 +330,12 @@
             </footer>
         @endif
     @endforeach
+    @if(!empty($site->business->phone))
+        <!-- Floating WhatsApp Contact Button -->
+        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $site->business->phone) }}?text={{ urlencode('Hi ' . $site->title . ', I saw your website and would like to inquire.') }}" target="_blank" class="fixed bottom-6 right-6 z-50 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-full shadow-lg shadow-emerald-500/30 flex items-center gap-2 font-bold text-xs transition transform hover:scale-105" title="Direct WhatsApp Chat">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span class="hidden sm:inline">Chat on WhatsApp</span>
+        </a>
+    @endif
 </body>
 </html>
