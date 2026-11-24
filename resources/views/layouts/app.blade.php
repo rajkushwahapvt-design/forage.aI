@@ -44,8 +44,8 @@
                     <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
                 </div>
                 <div>
-                    <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">AI Builds My Website</span>
-                    <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs font-semibold rounded bg-blue-100 text-blue-800">Websites.co.in</span>
+                    <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">Websites AI</span>
+                    <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs font-semibold rounded bg-blue-100 text-blue-800">Builder</span>
                 </div>
             </a>
             <div class="flex items-center gap-3 text-sm">
@@ -90,7 +90,7 @@
 
     <!-- Global Footer -->
     <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12">
-        <p>Built for the Websites.co.in Full Stack Development Assignment &bull; Laravel + MySQL + Gemini AI</p>
+        <p>Websites AI &bull; Instant AI Website Builder &bull; Laravel + MySQL</p>
     </footer>
 
     @yield('scripts')

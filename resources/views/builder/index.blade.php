@@ -15,14 +15,14 @@
             Provide any mix of business name, city, social links, Google listing, or upload price lists & brochures. We crawl, extract real facts, and build your bespoke website.
         </p>
 
-        <!-- Quick 1-Click Demo Previews -->
+        <!-- Industry Starter Templates -->
         <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <span class="text-xs font-medium text-slate-500">Quick Test Presets:</span>
-            <button type="button" onclick="loadPreset('bakery')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 border border-amber-300 transition">
-                <i class="fa-solid fa-bread-slice mr-1"></i> Real Business 1: Bakery (Mumbai)
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Sample Templates:</span>
+            <button type="button" onclick="loadPreset('bakery')" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:border-blue-500 hover:text-blue-600 shadow-sm transition">
+                <i class="fa-solid fa-bread-slice text-amber-500 mr-1"></i> Artisan Bakery & Cafe
             </button>
-            <button type="button" onclick="loadPreset('plumbing')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-sky-100 text-sky-800 hover:bg-sky-200 border border-sky-300 transition">
-                <i class="fa-solid fa-wrench mr-1"></i> Real Business 2: HVAC & Plumbing (Bangalore)
+            <button type="button" onclick="loadPreset('plumbing')" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:border-blue-500 hover:text-blue-600 shadow-sm transition">
+                <i class="fa-solid fa-wrench text-sky-500 mr-1"></i> HVAC & Home Services
             </button>
         </div>
     </div>

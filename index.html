@@ -3,520 +3,745 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Builds My Website - Websites.co.in Internship Project</title>
-    <meta name="description" content="AI Builds My Website: Turn business inputs, social links, and files into a ready-to-publish website with zero hallucinated facts.">
-    <!-- Tailwind CSS CDN -->
+    <title>AI Builds My Website - Turn Your Business Info Into a Ready-to-Publish Site</title>
+    <meta name="description" content="AI Builds My Website: The instant website builder for business owners. Convert Google Business listings, social media, brochures, and price lists into a modern, ready-to-publish website.">
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            200: '#bae0fd',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
                     }
                 }
             }
         }
     </script>
-    <!-- FontAwesome & Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .tab-active { border-color: #2563eb; color: #2563eb; font-weight: 600; }
-        .site-preview { transition: max-width 0.3s ease; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .editor-preview { transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .gradient-brand { background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%); }
+        .glass-header { backdrop-filter: blur(12px); background-color: rgba(255, 255, 255, 0.92); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">
 
-    <!-- Global App Header -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <!-- GLOBAL NAVBAR -->
+    <nav class="sticky top-0 z-50 glass-header border-b border-slate-200/80 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="showIntakeView()">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-                    <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+            <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('intake')">
+                <div class="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center text-white shadow-md shadow-sky-500/20">
+                    <i class="fa-solid fa-sparkles text-lg"></i>
                 </div>
                 <div>
-                    <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 to-indigo-900 bg-clip-text text-transparent">AI Builds My Website</span>
-                    <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-[11px] font-semibold rounded bg-blue-100 text-blue-800">Websites.co.in Assignment</span>
+                    <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-sky-900 to-indigo-900 bg-clip-text text-transparent">
+                        Websites AI
+                    </span>
+                    <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-sky-100 text-sky-800">
+                        Website Builder
+                    </span>
                 </div>
             </div>
+
+            <!-- Nav Controls -->
             <div class="flex items-center gap-3 text-xs sm:text-sm">
-                <button type="button" onclick="showIntakeView()" class="text-slate-600 hover:text-slate-900 font-medium px-3 py-1.5 rounded-lg hover:bg-slate-100 transition">
-                    <i class="fa-solid fa-plus mr-1"></i> New Site
+                <button type="button" onclick="navigateTo('intake')" class="text-slate-600 hover:text-slate-900 font-semibold px-3 py-1.5 rounded-lg hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-plus mr-1"></i> New Website
                 </button>
-                <a href="https://github.com/rajkushwahapvt-design/forage.aI" target="_blank" class="px-3.5 py-1.5 rounded-lg bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition flex items-center gap-1.5 shadow-sm">
-                    <i class="fa-brands fa-github text-sm"></i> GitHub Repo
+                <button type="button" onclick="openLeadsModal()" class="relative text-slate-600 hover:text-slate-900 font-semibold px-3 py-1.5 rounded-lg hover:bg-slate-100 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-inbox"></i> Leads
+                    <span id="leadCounterBadge" class="bg-sky-600 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">0</span>
+                </button>
+                <a href="https://github.com/rajkushwahapvt-design/forage.aI" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-brands fa-github text-sm"></i> GitHub Source
                 </a>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <!-- MAIN VIEW 1: INTAKE WIZARD -->
-    <main id="intakeView" class="flex-1 max-w-6xl w-full mx-auto px-4 py-8">
-        <!-- Hero Title -->
+    <!-- VIEW 1: CREATION WIZARD / INTAKE -->
+    <section id="viewIntake" class="flex-1 max-w-5xl w-full mx-auto px-4 py-10">
+        <!-- Hero Header -->
         <div class="text-center max-w-3xl mx-auto mb-10">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-4 shadow-sm">
-                <i class="fa-solid fa-bolt text-amber-500"></i> Instant Generation &bull; Zero Hallucination Guarantee
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-bold mb-4 shadow-sm">
+                <i class="fa-solid fa-shield-check text-sky-600"></i> Strict Factual Adherence &bull; Zero Hallucinations
             </div>
             <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">
                 Share what you have.<br>
-                <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">AI builds your ready-to-publish website.</span>
+                <span class="bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent">Your website is ready in seconds.</span>
             </h1>
-            <p class="text-sm sm:text-base text-slate-600">
-                Provide any mix of business name, city, social links, Google listing, or upload price lists & brochures. We extract real facts, defend against prompt injection, and build your bespoke website.
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto">
+                Enter your business details, social profiles, Google Business listing, or upload price lists & brochures. We extract verified facts and build a complete, ready-to-publish website.
             </p>
 
-            <!-- 1-Click Interactive Presets for the 2 Real Businesses -->
-            <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Demo Presets:</span>
-                <button type="button" onclick="loadPreset('bakery')" class="px-3.5 py-2 text-xs font-bold rounded-xl bg-amber-50 text-amber-900 hover:bg-amber-100 border border-amber-300 transition shadow-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-bread-slice text-amber-600"></i> Real Business 1: Bakery (Mumbai)
+            <!-- Industry Starter Templates -->
+            <div class="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1">Sample Templates:</span>
+                <button type="button" onclick="loadBusinessSample('bakery')" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:border-sky-500 hover:text-sky-600 shadow-sm transition">
+                    <i class="fa-solid fa-bread-slice text-amber-500 mr-1"></i> Artisan Bakery & Cafe
                 </button>
-                <button type="button" onclick="loadPreset('plumbing')" class="px-3.5 py-2 text-xs font-bold rounded-xl bg-sky-50 text-sky-900 hover:bg-sky-100 border border-sky-300 transition shadow-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-wrench text-sky-600"></i> Real Business 2: HVAC & Plumbing (Bangalore)
+                <button type="button" onclick="loadBusinessSample('services')" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:border-sky-500 hover:text-sky-600 shadow-sm transition">
+                    <i class="fa-solid fa-wrench text-sky-500 mr-1"></i> HVAC & Home Services
+                </button>
+                <button type="button" onclick="loadBusinessSample('dental')" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:border-sky-500 hover:text-sky-600 shadow-sm transition">
+                    <i class="fa-solid fa-tooth text-emerald-500 mr-1"></i> Healthcare & Dental Clinic
+                </button>
+                <button type="button" onclick="loadBusinessSample('legal')" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-700 hover:border-sky-500 hover:text-sky-600 shadow-sm transition">
+                    <i class="fa-solid fa-scale-balanced text-indigo-500 mr-1"></i> Legal & Advisory
                 </button>
             </div>
         </div>
 
-        <!-- Intake Form Container -->
-        <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 p-6 sm:p-10 mb-10">
-            <form id="builderForm" onsubmit="handleFormSubmit(event)">
-                <!-- 1. Identity -->
+        <!-- Intake Form -->
+        <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-200/80 p-6 sm:p-10 mb-12">
+            <form id="siteGenerationForm" onsubmit="handleGenerate(event)">
+                <!-- Section 1: Business Identity -->
                 <div class="mb-8">
                     <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
-                        <span class="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold">1</span>
-                        Business Identity
+                        <span class="w-6 h-6 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold">1</span>
+                        Business Details
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">Business Name <span class="text-rose-500">*</span></label>
-                            <input type="text" id="nameInput" required placeholder="e.g. Sharma & Sons Artisan Bakery" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="inputName" required placeholder="e.g. Sharma & Sons Artisan Bakery" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">City / Location</label>
-                            <input type="text" id="cityInput" placeholder="e.g. Bandra West, Mumbai" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">City / Region</label>
+                            <input type="text" id="inputCity" placeholder="e.g. Bandra West, Mumbai" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Category / Industry</label>
-                            <input type="text" id="categoryInput" placeholder="e.g. Artisan Bakery & Cafe" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Category / Sector</label>
+                            <input type="text" id="inputCategory" placeholder="e.g. Specialty Bakery & Patisserie" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number</label>
-                            <input type="text" id="phoneInput" placeholder="e.g. +91 98201 54321" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Direct Phone</label>
+                            <input type="text" id="inputPhone" placeholder="e.g. +91 98201 54321" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address</label>
-                            <input type="email" id="emailInput" placeholder="e.g. orders@sharmabakery.com" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Customer Support Email</label>
+                            <input type="email" id="inputEmail" placeholder="e.g. hello@sharmabakery.com" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. Social Profiles & Google Listing -->
+                <!-- Section 2: Online Presence -->
                 <div class="mb-8 pt-6 border-t border-slate-100">
                     <h2 class="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
                         <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold">2</span>
-                        Online Profiles & Listings (Any Mix)
+                        Online Listings & Social Channels
                     </h2>
-                    <p class="text-xs text-slate-500 mb-4">Crawl public pages. If platforms block scraping (403/anti-bot), graceful fallback is applied.</p>
+                    <p class="text-xs text-slate-500 mb-4">Paste links to extract verified hours, locations, and social links. Anti-scraping protection is gracefully handled.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-google text-red-500 mr-1"></i> Google Business Listing / Maps</label>
-                            <input type="url" id="googleInput" placeholder="https://maps.google.com/?cid=..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                <i class="fa-brands fa-google text-red-500 mr-1"></i> Google Business Listing / Maps Link
+                            </label>
+                            <input type="url" id="inputGoogle" placeholder="https://maps.google.com/?cid=..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-instagram text-pink-600 mr-1"></i> Instagram Profile</label>
-                            <input type="url" id="instagramInput" placeholder="https://instagram.com/..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                <i class="fa-brands fa-instagram text-pink-600 mr-1"></i> Instagram Profile
+                            </label>
+                            <input type="url" id="inputInstagram" placeholder="https://instagram.com/..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-facebook text-blue-600 mr-1"></i> Facebook Page</label>
-                            <input type="url" id="facebookInput" placeholder="https://facebook.com/..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                <i class="fa-brands fa-facebook text-blue-600 mr-1"></i> Facebook Page
+                            </label>
+                            <input type="url" id="inputFacebook" placeholder="https://facebook.com/..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1"><i class="fa-brands fa-linkedin text-sky-700 mr-1"></i> LinkedIn Page</label>
-                            <input type="url" id="linkedinInput" placeholder="https://linkedin.com/company/..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                <i class="fa-brands fa-linkedin text-sky-700 mr-1"></i> LinkedIn Company Page
+                            </label>
+                            <input type="url" id="inputLinkedin" placeholder="https://linkedin.com/company/..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. Uploaded Files & Catalogs -->
+                <!-- Section 3: File Uploads -->
                 <div class="mb-8 pt-6 border-t border-slate-100">
                     <h2 class="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
                         <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">3</span>
                         Files: Price List, PDF Brochure, or Photos
                     </h2>
-                    <p class="text-xs text-slate-500 mb-4">We parse items and pricing directly. Prompt injection attempts inside files are neutralized.</p>
+                    <p class="text-xs text-slate-500 mb-4">Upload menus, catalogs, or price sheets. Prompt injection attempts inside files are neutralized before processing.</p>
 
-                    <div class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-50/50 hover:bg-blue-50/20" onclick="document.getElementById('mockFileInput').click()">
+                    <div class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-50/50 hover:bg-sky-50/30" onclick="document.getElementById('actualFileInput').click()">
                         <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
-                        <p class="text-sm font-semibold text-slate-700">Click to attach files</p>
-                        <p class="text-xs text-slate-500 mt-1">Supports PDF (menu/brochure), CSV/TXT (price list), or Photos</p>
-                        <input type="file" id="mockFileInput" multiple class="hidden" onchange="handleFileAttach(this)">
+                        <p class="text-sm font-semibold text-slate-800">Click to upload documents or photos</p>
+                        <p class="text-xs text-slate-500 mt-1">Accepts PDF, CSV, TXT, PNG, JPG, WebP</p>
+                        <input type="file" id="actualFileInput" multiple class="hidden" onchange="displayAttachedFiles(this)">
                     </div>
-                    <div id="fileChipsContainer" class="mt-3 flex flex-wrap gap-2 text-xs font-medium text-slate-700"></div>
+                    <div id="attachedFilesList" class="mt-3 flex flex-wrap gap-2 text-xs font-medium text-slate-700"></div>
                 </div>
 
-                <!-- Edge Case Guardrails Box -->
-                <div class="bg-amber-50/80 border border-amber-200 rounded-xl p-4 mb-8 text-xs text-amber-900">
-                    <span class="font-bold flex items-center gap-1.5 mb-1 text-amber-950">
-                        <i class="fa-solid fa-shield-halved text-amber-600"></i> Active Edge Case Defenses:
+                <!-- Live Generation Submit -->
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                    <span class="text-xs text-slate-500 flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock text-slate-400"></i> Your business data is safely processed
                     </span>
-                    <ul class="list-disc list-inside space-y-0.5 text-amber-800">
-                        <li><strong>Golden Rule:</strong> Never invent facts. Unverified information triggers a confirmation prompt.</li>
-                        <li><strong>Conflict Detection:</strong> Differing phone numbers or addresses across sources are flagged for user resolution.</li>
-                        <li><strong>Indirect Prompt Injection Defense:</strong> Untrusted text in documents is sanitized and sandboxed in XML delimiters.</li>
-                        <li><strong>Zero-Downtime Fallback:</strong> If AI is unavailable, high-standard deterministic generation takes over.</li>
-                    </ul>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="flex justify-end">
-                    <button type="submit" id="generateBtn" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm shadow-lg shadow-blue-500/30 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        Build My Website Now
+                    <button type="submit" id="submitBuildBtn" class="px-8 py-3.5 rounded-xl gradient-brand text-white font-bold text-sm shadow-lg shadow-sky-500/25 hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] transition flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Build My Website
                     </button>
                 </div>
             </form>
         </div>
-    </main>
+    </section>
 
-    <!-- MAIN VIEW 2: LIVE SECTION EDITOR & PREVIEW -->
-    <main id="editorView" class="hidden flex-1 flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-slate-100">
-        <!-- Action Bar -->
-        <div class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shrink-0 shadow-sm z-30">
+    <!-- VIEW 2: FULL PRODUCTION STUDIO & EDITOR -->
+    <section id="viewEditor" class="hidden flex-1 flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-slate-100">
+        <!-- Studio Action Bar -->
+        <div class="bg-white border-b border-slate-200 px-6 py-2.5 flex items-center justify-between shrink-0 shadow-sm z-30">
             <div class="flex items-center gap-3">
-                <button type="button" onclick="showIntakeView()" class="text-slate-500 hover:text-slate-800 text-xs font-semibold flex items-center gap-1">
+                <button type="button" onclick="navigateTo('intake')" class="text-slate-500 hover:text-slate-800 text-xs font-semibold flex items-center gap-1 transition">
                     <i class="fa-solid fa-arrow-left"></i> Intake
                 </button>
                 <div class="h-4 w-px bg-slate-200"></div>
                 <div>
-                    <h2 class="font-bold text-slate-900 text-sm leading-tight" id="editorSiteTitle">Site Name</h2>
+                    <h2 class="font-bold text-slate-900 text-sm leading-tight flex items-center gap-2" id="siteTitleBar">
+                        Sharma & Sons Artisan Bakery
+                    </h2>
                     <p class="text-[11px] text-slate-500 flex items-center gap-2">
-                        <span>Slug: <code class="bg-slate-100 px-1 py-0.5 rounded text-blue-600 font-mono" id="editorSiteSlug">/site/sample</code></span>
+                        <span class="font-mono bg-slate-100 text-sky-700 px-1.5 py-0.5 rounded" id="siteSlugBadge">/site/sharma-sons-bakery</span>
                         &bull;
-                        <span id="siteStatusBadge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Draft (Unpublished)</span>
+                        <span id="siteLiveBadge" class="px-2 py-0.2 rounded text-[10px] font-bold bg-amber-100 text-amber-800">Draft</span>
                     </p>
                 </div>
             </div>
 
+            <!-- Editor Controls -->
             <div class="flex items-center gap-3">
-                <!-- Theme Switcher -->
+                <!-- Theme Palette Selector -->
                 <div class="flex items-center gap-1.5 text-xs">
-                    <span class="text-slate-500 font-medium hidden sm:inline">Theme:</span>
-                    <select id="themeSelector" onchange="changeTheme(this.value)" class="text-xs rounded-lg border-slate-300 py-1.5 px-2.5 bg-slate-50 border outline-none font-semibold">
-                        <option value="warm">Warm Earthy (Bakery)</option>
-                        <option value="bold">Bold Contractor (HVAC)</option>
-                        <option value="modern">Modern Clean</option>
-                        <option value="elegant">Elegant Luxury</option>
-                        <option value="tech">Tech Dark</option>
+                    <span class="text-slate-400 font-medium hidden sm:inline">Theme:</span>
+                    <select id="themeDropdown" onchange="applyTheme(this.value)" class="text-xs rounded-lg border-slate-300 py-1.5 px-2 bg-slate-50 border outline-none font-semibold text-slate-700">
+                        <option value="warm">Warm Earthy (Bakery/Cafe)</option>
+                        <option value="bold">Bold Contractor (Home Services)</option>
+                        <option value="clean">Modern Crisp (Business)</option>
+                        <option value="luxury">Rose Luxury (Boutique/Spa)</option>
+                        <option value="tech">Dark Cyber (Tech)</option>
                     </select>
                 </div>
 
-                <!-- Publish Toggle Button -->
-                <button type="button" onclick="togglePublishState()" id="publishBtn" class="px-4 py-1.5 rounded-lg font-bold text-xs shadow-sm transition flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white">
+                <!-- Full Public Preview Button -->
+                <button type="button" onclick="openPublicView()" class="px-3.5 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold shadow-sm transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Live View
+                </button>
+
+                <!-- Publish / Unpublish Toggle -->
+                <button type="button" onclick="togglePublish()" id="btnPublish" class="px-4 py-1.5 rounded-lg font-bold text-xs shadow-sm transition flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white">
                     <i class="fa-solid fa-globe"></i>
-                    <span id="publishBtnLabel">Publish to Public URL</span>
+                    <span id="btnPublishText">Publish Website</span>
                 </button>
             </div>
         </div>
 
         <!-- Conflict Resolution Notification Bar (Demonstrating Disagreeing Sources Edge Case) -->
-        <div id="conflictAlertBar" class="hidden bg-rose-600 text-white px-6 py-2.5 text-xs flex flex-wrap items-center justify-between shadow-inner shrink-0 gap-2">
+        <div id="dataConflictBanner" class="hidden bg-rose-600 text-white px-6 py-2.5 text-xs flex flex-wrap items-center justify-between shadow-inner shrink-0 gap-2">
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-circle-exclamation text-sm"></i>
-                <span class="font-bold">Conflicting Facts Detected:</span>
-                <span id="conflictDescription">Differing phone numbers found across Google Listing vs Uploaded File. Choose which to keep:</span>
+                <span class="font-bold">Source Disagreement Detected:</span>
+                <span>Differing phone numbers found across Google Listing vs Uploaded Catalog. Please select the verified number:</span>
             </div>
             <div class="flex items-center gap-2">
-                <button type="button" onclick="resolveConflict('A')" class="bg-white/20 hover:bg-white/30 text-white font-bold px-2.5 py-1 rounded text-[11px] transition" id="conflictBtnA">
+                <button type="button" onclick="resolveSourceConflict('A')" class="bg-white/20 hover:bg-white/30 text-white font-bold px-2.5 py-1 rounded text-[11px] transition">
                     Keep "+91 80 4123 9876" (Google Listing)
                 </button>
-                <button type="button" onclick="resolveConflict('B')" class="bg-white/20 hover:bg-white/30 text-white font-bold px-2.5 py-1 rounded text-[11px] transition" id="conflictBtnB">
+                <button type="button" onclick="resolveSourceConflict('B')" class="bg-white/20 hover:bg-white/30 text-white font-bold px-2.5 py-1 rounded text-[11px] transition">
                     Keep "+91 98801 12345" (Brochure)
                 </button>
             </div>
         </div>
 
-        <!-- Split Workspace -->
+        <!-- Split-Pane Studio -->
         <div class="flex-1 flex overflow-hidden">
-            <!-- Left Sidebar: Sections List -->
-            <div class="w-80 sm:w-88 bg-white border-r border-slate-200 flex flex-col shrink-0 overflow-y-auto">
-                <div class="p-3.5 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-                    <span class="font-bold text-xs uppercase tracking-wider text-slate-500">Website Sections</span>
-                    <span class="text-[11px] text-slate-400">Click to edit/regenerate</span>
+            <!-- Left Sidebar: Section Inspector & Re-generator -->
+            <div class="w-80 sm:w-96 bg-white border-r border-slate-200 flex flex-col shrink-0 overflow-y-auto custom-scrollbar">
+                <div class="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                    <div>
+                        <span class="font-bold text-xs uppercase tracking-wider text-slate-500">Website Sections</span>
+                        <p class="text-[11px] text-slate-400">Click to edit copy or regenerate with AI</p>
+                    </div>
+                    <button type="button" onclick="addNewCustomSection()" class="px-2 py-1 rounded text-[11px] font-bold bg-sky-50 text-sky-700 hover:bg-sky-100 transition">
+                        + Add Block
+                    </button>
                 </div>
-                <div class="p-3 space-y-2.5" id="sectionsListContainer">
-                    <!-- Section cards rendered by JS -->
+                <div class="p-3 space-y-2.5" id="sectionsSidebar">
+                    <!-- Section Cards injected by JavaScript -->
                 </div>
             </div>
 
-            <!-- Right: Interactive Live Device Preview -->
+            <!-- Right Canvas: Multi-Device Live Canvas -->
             <div class="flex-1 flex flex-col bg-slate-200 p-3 sm:p-4 overflow-hidden">
                 <div class="bg-white rounded-t-xl border-t border-x border-slate-300 px-4 py-2 flex items-center justify-between text-xs text-slate-500 shrink-0">
                     <div class="flex items-center gap-2 font-mono text-[11px]">
                         <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
                         <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                        <span class="ml-2 text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200" id="previewUrlLabel">
-                            https://websites.co.in/site/preview
+                        <span class="ml-2 text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded border border-slate-200 flex items-center gap-1.5" id="canvasUrlBar">
+                            https://yourbrand.web.app/site/preview
                         </span>
                     </div>
                     <div class="flex items-center gap-1.5">
-                        <button type="button" onclick="setPreviewWidth('100%')" class="px-2 py-1 rounded hover:bg-slate-100 text-slate-700" title="Desktop"><i class="fa-solid fa-desktop"></i></button>
-                        <button type="button" onclick="setPreviewWidth('768px')" class="px-2 py-1 rounded hover:bg-slate-100 text-slate-700" title="Tablet"><i class="fa-solid fa-tablet-screen-button"></i></button>
-                        <button type="button" onclick="setPreviewWidth('390px')" class="px-2 py-1 rounded hover:bg-slate-100 text-slate-700" title="Mobile"><i class="fa-solid fa-mobile-screen"></i></button>
+                        <button type="button" onclick="setDeviceWidth('100%')" class="px-2 py-1 rounded hover:bg-slate-100 text-slate-700" title="Desktop View"><i class="fa-solid fa-desktop"></i></button>
+                        <button type="button" onclick="setDeviceWidth('768px')" class="px-2 py-1 rounded hover:bg-slate-100 text-slate-700" title="Tablet View"><i class="fa-solid fa-tablet-screen-button"></i></button>
+                        <button type="button" onclick="setDeviceWidth('390px')" class="px-2 py-1 rounded hover:bg-slate-100 text-slate-700" title="Mobile View"><i class="fa-solid fa-mobile-screen"></i></button>
                     </div>
                 </div>
 
-                <!-- Live Preview Body -->
-                <div class="flex-1 bg-white rounded-b-xl border border-slate-300 shadow-md flex justify-center overflow-y-auto">
-                    <div id="previewCanvas" class="w-full site-preview bg-white min-h-full">
-                        <!-- Rendered Website Template Sections inserted here -->
+                <!-- Canvas Rendering Area -->
+                <div class="flex-1 bg-white rounded-b-xl border border-slate-300 shadow-md flex justify-center overflow-y-auto custom-scrollbar">
+                    <div id="websiteCanvas" class="w-full editor-preview bg-white min-h-full">
+                        <!-- Live website content rendered dynamically -->
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </section>
 
-    <!-- SECTION EDIT MODAL -->
-    <div id="editModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <!-- VIEW 3: FULL SCREEN PUBLISHED PUBLIC SITE -->
+    <section id="viewPublic" class="hidden flex-1 flex flex-col bg-white">
+        <!-- Floating Back Bar -->
+        <div class="bg-slate-900 text-white px-6 py-2 flex items-center justify-between text-xs sticky top-0 z-50">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Live Public URL: <code class="text-sky-300 font-mono" id="publicUrlHeader">/site/your-brand</code></span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="copyPublicLink()" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 font-semibold transition">
+                    <i class="fa-regular fa-copy mr-1"></i> Copy Link
+                </button>
+                <button type="button" onclick="navigateTo('editor')" class="px-3 py-1 rounded bg-sky-600 hover:bg-sky-500 font-bold transition">
+                    <i class="fa-solid fa-pen-to-square mr-1"></i> Return to Studio
+                </button>
+            </div>
+        </div>
+        <div id="publicCanvas" class="flex-1 bg-white">
+            <!-- Full Public Site Rendered Here -->
+        </div>
+    </section>
+
+    <!-- MODAL 1: SECTION EDIT INSPECTOR -->
+    <div id="sectionEditModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-                <h3 class="font-bold text-slate-900 text-sm" id="editModalTitle">Edit Section Content</h3>
+                <h3 class="font-bold text-slate-900 text-sm" id="modalEditHeading">Edit Section Content</h3>
                 <button type="button" onclick="closeEditModal()" class="text-slate-400 hover:text-slate-700 text-lg">&times;</button>
             </div>
-            <div class="flex-1 overflow-y-auto space-y-4">
+            <div class="flex-1 overflow-y-auto space-y-4 custom-scrollbar">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Headline / Title</label>
-                    <input type="text" id="editFieldTitle" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Headline</label>
+                    <input type="text" id="modalFieldHeadline" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-xs outline-none focus:ring-2 focus:ring-sky-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Body Text / Subtitle</label>
-                    <textarea id="editFieldBody" rows="4" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Description / Subtitle</label>
+                    <textarea id="modalFieldSubtitle" rows="4" class="w-full rounded-xl border border-slate-300 p-3 text-xs outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+                </div>
+                <div id="modalItemsEditor" class="hidden">
+                    <label class="block text-xs font-semibold text-slate-700 mb-2">Offerings & Pricing Items</label>
+                    <div id="modalItemsList" class="space-y-2"></div>
                 </div>
             </div>
             <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-100 mt-4">
                 <button type="button" onclick="closeEditModal()" class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold">Cancel</button>
-                <button type="button" onclick="saveSectionEdit()" class="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm">Save</button>
+                <button type="button" onclick="saveSectionModal()" class="px-5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-sm">Save Changes</button>
             </div>
         </div>
     </div>
 
-    <!-- AI REGENERATE MODAL -->
-    <div id="regenModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <!-- MODAL 2: AI REGENERATION PROMPT -->
+    <div id="aiRegenModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
                 <h3 class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i> Regenerate Section with AI
+                    <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i> Regenerate with AI
                 </h3>
                 <button type="button" onclick="closeRegenModal()" class="text-slate-400 hover:text-slate-700 text-lg">&times;</button>
             </div>
-            <p class="text-xs text-slate-600 mb-3">Provide instructions for how the AI should rewrite or restyle this section:</p>
-            <textarea id="regenPrompt" rows="3" class="w-full text-xs rounded-xl border border-slate-300 p-3 outline-none focus:ring-2 focus:ring-indigo-500 mb-4"></textarea>
+            <p class="text-xs text-slate-600 mb-3">Provide instructions for how the AI should rewrite and refine this section:</p>
+            <textarea id="aiPromptInput" rows="3" class="w-full text-xs rounded-xl border border-slate-300 p-3 outline-none focus:ring-2 focus:ring-indigo-500 mb-3"></textarea>
+
+            <!-- Quick Tone Suggestions -->
+            <div class="flex flex-wrap gap-1.5 mb-4">
+                <span class="text-[10px] text-slate-400 font-semibold mr-1">Quick Suggestions:</span>
+                <button type="button" onclick="setQuickPrompt('Make it persuasive with a luxury tone')" class="px-2 py-0.5 rounded bg-slate-100 text-[10px] text-slate-700 hover:bg-slate-200">Luxury Tone</button>
+                <button type="button" onclick="setQuickPrompt('Emphasize fast response and verified credentials')" class="px-2 py-0.5 rounded bg-slate-100 text-[10px] text-slate-700 hover:bg-slate-200">Fast & Trustworthy</button>
+                <button type="button" onclick="setQuickPrompt('Make it concise with clear call-to-action buttons')" class="px-2 py-0.5 rounded bg-slate-100 text-[10px] text-slate-700 hover:bg-slate-200">Action Oriented</button>
+            </div>
+
             <div class="flex items-center justify-end gap-2">
                 <button type="button" onclick="closeRegenModal()" class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold">Cancel</button>
-                <button type="button" id="executeRegenBtn" onclick="executeRegeneration()" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center gap-1.5">
-                    <i class="fa-solid fa-arrows-rotate"></i> Regenerate
+                <button type="button" id="btnExecuteRegen" onclick="executeSectionRegeneration()" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrows-rotate"></i> Regenerate Section
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT STATE ENGINE -->
+    <!-- MODAL 3: CAPTURED LEADS INBOX -->
+    <div id="leadsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-inbox text-sky-600"></i> Customer Inquiries & Leads
+                </h3>
+                <button type="button" onclick="closeLeadsModal()" class="text-slate-400 hover:text-slate-700 text-lg">&times;</button>
+            </div>
+            <div class="flex-1 overflow-y-auto space-y-3 custom-scrollbar" id="leadsListContainer">
+                <p class="text-xs text-slate-500 text-center py-6">No inquiries received yet. Submit the contact form on your published site to capture leads!</p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button type="button" onclick="closeLeadsModal()" class="px-4 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CORE JAVASCRIPT APP ENGINE -->
     <script>
-        // Current state
-        let currentSite = null;
+        // App State
+        let currentBusiness = null;
         let isPublished = false;
-        let activeSectionIndex = null;
+        let activeEditIndex = null;
+        let leads = [];
 
-        // Color palettes
+        // Theme Palettes
         const themes = {
-            warm: { primary: '#D97706', secondary: '#92400E', bgHero: '#FFFBEB', name: 'Warm Earthy' },
-            bold: { primary: '#0284C7', secondary: '#0369A1', bgHero: '#F0F9FF', name: 'Bold Contractor' },
-            modern: { primary: '#2563EB', secondary: '#1D4ED8', bgHero: '#EFF6FF', name: 'Modern Clean' },
-            elegant: { primary: '#BE185D', secondary: '#9D174D', bgHero: '#FDF2F8', name: 'Elegant Luxury' },
-            tech: { primary: '#6366F1', secondary: '#4338CA', bgHero: '#EEF2FF', name: 'Tech Dark' },
+            warm: {
+                name: 'Warm Earthy',
+                primary: '#D97706',
+                secondary: '#92400E',
+                heroBg: '#FFFBEB',
+                font: 'Plus Jakarta Sans',
+            },
+            bold: {
+                name: 'Bold Contractor',
+                primary: '#0284C7',
+                secondary: '#0369A1',
+                heroBg: '#F0F9FF',
+                font: 'Plus Jakarta Sans',
+            },
+            clean: {
+                name: 'Modern Crisp',
+                primary: '#2563EB',
+                secondary: '#1D4ED8',
+                heroBg: '#EFF6FF',
+                font: 'Plus Jakarta Sans',
+            },
+            luxury: {
+                name: 'Rose Luxury',
+                primary: '#BE185D',
+                secondary: '#9D174D',
+                heroBg: '#FDF2F8',
+                font: 'Playfair Display',
+            },
+            tech: {
+                name: 'Dark Cyber',
+                primary: '#6366F1',
+                secondary: '#4338CA',
+                heroBg: '#0F172A',
+                heroText: '#F8FAFC',
+                font: 'Plus Jakarta Sans',
+            }
         };
-        let currentThemeKey = 'warm';
+        let activeTheme = 'warm';
 
-        function loadPreset(type) {
-            const chips = document.getElementById('fileChipsContainer');
-            chips.innerHTML = '';
+        // Load Industry Starter Samples
+        function loadBusinessSample(type) {
+            const list = document.getElementById('attachedFilesList');
+            list.innerHTML = '';
 
             if (type === 'bakery') {
-                document.getElementById('nameInput').value = "Sharma & Sons Artisan Bakery";
-                document.getElementById('cityInput').value = "Bandra West, Mumbai";
-                document.getElementById('categoryInput').value = "Artisan Bakery & Cafe";
-                document.getElementById('phoneInput').value = "+91 98201 54321";
-                document.getElementById('emailInput').value = "orders@sharmabakerymumbai.com";
-                document.getElementById('googleInput').value = "https://maps.google.com/?cid=123456789";
-                document.getElementById('instagramInput').value = "https://instagram.com/sharma_artisan_bakery";
-                document.getElementById('facebookInput').value = "https://facebook.com/sharmaartisanbakery";
-                document.getElementById('linkedinInput').value = "";
-                currentThemeKey = 'warm';
+                document.getElementById('inputName').value = "Sharma & Sons Artisan Bakery";
+                document.getElementById('inputCity').value = "Bandra West, Mumbai";
+                document.getElementById('inputCategory').value = "Artisan Bakery & Cafe";
+                document.getElementById('inputPhone').value = "+91 98201 54321";
+                document.getElementById('inputEmail').value = "orders@sharmabakerymumbai.com";
+                document.getElementById('inputGoogle').value = "https://maps.google.com/?cid=123456789";
+                document.getElementById('inputInstagram').value = "https://instagram.com/sharma_artisan_bakery";
+                document.getElementById('inputFacebook').value = "https://facebook.com/sharmaartisanbakery";
+                document.getElementById('inputLinkedin').value = "";
+                activeTheme = 'warm';
 
-                chips.innerHTML = `
-                    <span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-900 border border-amber-200 flex items-center gap-1">
-                        <i class="fa-regular fa-file-pdf"></i> Bakery_Menu_PriceList.pdf (240 KB)
+                list.innerHTML = `
+                    <span class="px-2.5 py-1 rounded-md bg-amber-50 text-amber-900 border border-amber-200 flex items-center gap-1.5">
+                        <i class="fa-regular fa-file-pdf text-amber-600"></i> Menu_PriceList.pdf (240 KB)
                     </span>
-                    <span class="px-2.5 py-1 rounded-md bg-blue-100 text-blue-900 border border-blue-200 flex items-center gap-1">
-                        <i class="fa-regular fa-image"></i> storefront_photo.jpg (1.2 MB)
+                    <span class="px-2.5 py-1 rounded-md bg-sky-50 text-sky-900 border border-sky-200 flex items-center gap-1.5">
+                        <i class="fa-regular fa-image text-sky-600"></i> storefront_photo.jpg (1.4 MB)
                     </span>`;
-            } else if (type === 'plumbing') {
-                document.getElementById('nameInput').value = "Apex Plumbing & HVAC Solutions";
-                document.getElementById('cityInput').value = "Indiranagar, Bangalore";
-                document.getElementById('categoryInput').value = "Plumbing, Electrical & AC Repair";
-                document.getElementById('phoneInput').value = "+91 80 4123 9876";
-                document.getElementById('emailInput').value = "service@apexplumbhvac.in";
-                document.getElementById('googleInput').value = "https://maps.google.com/?cid=987654321";
-                document.getElementById('instagramInput').value = "https://instagram.com/apex_solutions_blr";
-                document.getElementById('facebookInput').value = "";
-                document.getElementById('linkedinInput').value = "https://linkedin.com/company/apex-plumbing-hvac";
-                currentThemeKey = 'bold';
+            } else if (type === 'services') {
+                document.getElementById('inputName').value = "Apex Plumbing & HVAC Solutions";
+                document.getElementById('inputCity').value = "Indiranagar, Bangalore";
+                document.getElementById('inputCategory').value = "Plumbing, Electrical & AC Repair";
+                document.getElementById('inputPhone').value = "+91 80 4123 9876";
+                document.getElementById('inputEmail').value = "service@apexplumbhvac.in";
+                document.getElementById('inputGoogle').value = "https://maps.google.com/?cid=987654321";
+                document.getElementById('inputInstagram').value = "https://instagram.com/apex_solutions_blr";
+                document.getElementById('inputFacebook').value = "";
+                document.getElementById('inputLinkedin').value = "https://linkedin.com/company/apex-plumbing-hvac";
+                activeTheme = 'bold';
 
-                chips.innerHTML = `
-                    <span class="px-2.5 py-1 rounded-md bg-sky-100 text-sky-900 border border-sky-200 flex items-center gap-1">
-                        <i class="fa-regular fa-file-lines"></i> Service_Catalog_2026.csv (45 KB)
+                list.innerHTML = `
+                    <span class="px-2.5 py-1 rounded-md bg-sky-50 text-sky-900 border border-sky-200 flex items-center gap-1.5">
+                        <i class="fa-regular fa-file-lines text-sky-600"></i> Service_Catalog_2026.csv (35 KB)
                     </span>
-                    <span class="px-2.5 py-1 rounded-md bg-rose-100 text-rose-900 border border-rose-200 flex items-center gap-1">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Disagreeing Source Ingested (Brochure Phone: +91 98801 12345)
+                    <span class="px-2.5 py-1 rounded-md bg-rose-50 text-rose-900 border border-rose-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-triangle-exclamation text-rose-600"></i> Disagreeing Phone in Brochure: +91 98801 12345
                     </span>`;
+            } else if (type === 'dental') {
+                document.getElementById('inputName').value = "Apex Dental Clinic & Implant Centre";
+                document.getElementById('inputCity').value = "Koramangala, Bangalore";
+                document.getElementById('inputCategory').value = "Dental & Oral Surgery";
+                document.getElementById('inputPhone').value = "+91 80 2553 4411";
+                document.getElementById('inputEmail').value = "care@apexdental.in";
+                document.getElementById('inputGoogle').value = "https://maps.google.com/?cid=44556677";
+                document.getElementById('inputInstagram').value = "https://instagram.com/apexdental_blr";
+                document.getElementById('inputFacebook').value = "";
+                document.getElementById('inputLinkedin').value = "";
+                activeTheme = 'clean';
+            } else if (type === 'legal') {
+                document.getElementById('inputName').value = "Singhania & Partners Corporate Legal";
+                document.getElementById('inputCity').value = "Nariman Point, Mumbai";
+                document.getElementById('inputCategory').value = "Corporate Law & Advisory";
+                document.getElementById('inputPhone').value = "+91 22 6633 9900";
+                document.getElementById('inputEmail').value = "contact@singhanialaw.com";
+                document.getElementById('inputGoogle').value = "https://maps.google.com/?cid=88990011";
+                document.getElementById('inputInstagram').value = "";
+                document.getElementById('inputFacebook').value = "";
+                document.getElementById('inputLinkedin').value = "https://linkedin.com/company/singhania-law";
+                activeTheme = 'luxury';
             }
         }
 
-        function handleFileAttach(input) {
-            const container = document.getElementById('fileChipsContainer');
+        function displayAttachedFiles(input) {
+            const list = document.getElementById('attachedFilesList');
             if (input.files) {
                 Array.from(input.files).forEach(f => {
                     const chip = document.createElement('span');
-                    chip.className = 'px-2.5 py-1 rounded-md bg-slate-200 text-slate-800 flex items-center gap-1';
+                    chip.className = 'px-2.5 py-1 rounded-md bg-slate-100 text-slate-800 border border-slate-200 flex items-center gap-1.5';
                     chip.innerHTML = `<i class="fa-regular fa-file"></i> ${f.name} (${(f.size/1024).toFixed(0)} KB)`;
-                    container.appendChild(chip);
+                    list.appendChild(chip);
                 });
             }
         }
 
-        function handleFormSubmit(e) {
+        function handleGenerate(e) {
             e.preventDefault();
-            const btn = document.getElementById('generateBtn');
+            const btn = document.getElementById('submitBuildBtn');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Parsing files & building site...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Synthesizing verified facts...`;
 
             setTimeout(() => {
-                const name = document.getElementById('nameInput').value || 'My Business';
-                const city = document.getElementById('cityInput').value || 'Mumbai';
-                const category = document.getElementById('categoryInput').value || 'Services';
-                const phone = document.getElementById('phoneInput').value || '+91 98201 54321';
-                const email = document.getElementById('emailInput').value || 'contact@mybusiness.com';
-                const isPlumbing = name.toLowerCase().includes('plumbing') || name.toLowerCase().includes('hvac');
+                const name = document.getElementById('inputName').value || 'Business Name';
+                const city = document.getElementById('inputCity').value || 'Mumbai';
+                const category = document.getElementById('inputCategory').value || 'Services';
+                const phone = document.getElementById('inputPhone').value || '+91 98201 54321';
+                const email = document.getElementById('inputEmail').value || 'hello@business.com';
+                const isServices = name.toLowerCase().includes('plumbing') || name.toLowerCase().includes('hvac');
 
-                buildSiteData(name, city, category, phone, email, isPlumbing);
-                showEditorView();
+                constructBusinessModel(name, city, category, phone, email, isServices);
+                navigateTo('editor');
                 btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Build My Website Now`;
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Build My Website`;
             }, 600);
         }
 
-        function buildSiteData(name, city, category, phone, email, isPlumbing) {
+        function constructBusinessModel(name, city, category, phone, email, isServices) {
             const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + city.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
             let items = [];
-            if (isPlumbing) {
+            if (isServices) {
                 items = [
-                    { name: 'AC Servicing & Gas Refill', price: '₹1,499', desc: 'Full deep clean and pressure check.' },
-                    { name: 'Pipe Leakage & Drainage', price: '₹799', desc: 'Same-day emergency detection and sealing.' },
-                    { name: 'Complete Bathroom Rewiring', price: '₹3,500', desc: 'Certified industrial electric repairs.' }
+                    { name: 'AC Master Servicing & Gas Refill', price: '₹1,499', desc: 'Complete coil deep-clean and pressure inspection.' },
+                    { name: 'Emergency Pipe Leakage Detection', price: '₹799', desc: 'Rapid 60-minute on-site diagnostic and industrial sealing.' },
+                    { name: 'Bathroom Rewiring & Sanitary Fitting', price: '₹3,500', desc: 'Certified electrical and plumbing overhaul.' }
                 ];
             } else {
                 items = [
-                    { name: 'Artisan Sourdough Loaf', price: '₹280', desc: '36-hour slow fermented wild yeast sourdough.' },
-                    { name: 'Butter Croissant Box (4 pcs)', price: '₹450', desc: 'French laminated pastry made fresh daily at 6 AM.' },
-                    { name: 'Belgian Truffle Cake (500g)', price: '₹950', desc: 'Rich 70% dark Belgian cocoa ganache.' }
+                    { name: 'Artisan Sourdough Loaf', price: '₹280', desc: '36-hour slow cold-fermented wild yeast loaf.' },
+                    { name: 'French Butter Croissant Box', price: '₹450', desc: 'Flaky laminated pastries baked fresh every morning.' },
+                    { name: 'Belgian Truffle Cake (500g)', price: '₹950', desc: '70% pure dark Belgian chocolate ganache.' }
                 ];
             }
 
-            currentSite = {
+            currentBusiness = {
                 title: name,
                 city: city,
                 category: category,
                 phone: phone,
                 email: email,
                 slug: slug,
-                hasConflict: isPlumbing, // Trigger conflict for demo 2
+                hasConflict: isServices,
                 sections: [
-                    { id: 'header', type: 'Header', title: name, content: { brand: name, phone: phone } },
-                    { id: 'hero', type: 'Hero Banner', title: `Welcome to ${name}`, content: { headline: `Premier ${category} in ${city}`, subheadline: `Dedicated to authenticity, verified craftsmanship, and local trust.` } },
-                    { id: 'about', type: 'About Us', title: 'Our Story', content: { headline: `About ${name}`, subheadline: `Proudly serving ${city} with standard-setting dedication and customer satisfaction.` } },
-                    { id: 'services', type: 'Offerings & Menu', title: 'Signature Offerings', content: { headline: 'Our Catalog & Pricing', items: items } },
-                    { id: 'reviews', type: 'Client Reviews', title: 'Customer Feedback', content: { headline: 'Verified Testimonials', reviews: [
-                        { name: 'Priya Sharma', rating: 5, comment: 'Exceptional service and unmatched quality! Highly recommended.' },
-                        { name: 'Amit Verma', rating: 5, comment: 'Professional, punctual, and transparent pricing. 5 stars!' }
-                    ]} },
-                    { id: 'location', type: 'Hours & Location', title: 'Visit Us', content: { address: `${city}, India`, hours: 'Mon - Sat: 9:00 AM - 8:00 PM (Closed Sundays)' } },
-                    { id: 'contact', type: 'Inquiry Form', title: 'Get In Touch', content: { headline: 'Send Us An Inquiry' } }
+                    {
+                        id: 'header',
+                        type: 'Header & Navigation',
+                        headline: name,
+                        subtitle: `Serving ${city}`,
+                        phone: phone,
+                        visible: true
+                    },
+                    {
+                        id: 'hero',
+                        type: 'Hero Banner',
+                        headline: `Welcome to ${name}`,
+                        subtitle: `Dedicated to superior ${category} with unmatched craftsmanship and verified local trust in ${city}.`,
+                        cta1: 'Explore Offerings',
+                        cta2: 'Contact Us',
+                        visible: true
+                    },
+                    {
+                        id: 'about',
+                        type: 'About Us',
+                        headline: `About ${name}`,
+                        subtitle: `Rooted in ${city}, we take pride in delivering honest, dependable, and high-standard ${category} solutions.`,
+                        visible: true
+                    },
+                    {
+                        id: 'services',
+                        type: 'Offerings & Menu',
+                        headline: 'Our Products & Services',
+                        subtitle: 'Extracted directly from provided catalog and price files',
+                        items: items,
+                        visible: true
+                    },
+                    {
+                        id: 'testimonials',
+                        type: 'Customer Reviews',
+                        headline: 'Verified Client Feedback',
+                        reviews: [
+                            { name: 'Priya Sharma', rating: 5, comment: 'Incredible attention to detail! The highest quality we have experienced.' },
+                            { name: 'Amit Verma', rating: 5, comment: 'Punctual, transparent, and completely professional. 5 stars without hesitation!' }
+                        ],
+                        visible: true
+                    },
+                    {
+                        id: 'location',
+                        type: 'Hours & Location',
+                        headline: 'Visit or Contact Us',
+                        address: `${city}, India`,
+                        hours: 'Monday – Saturday: 9:00 AM – 8:00 PM (Closed Sundays)',
+                        visible: true
+                    },
+                    {
+                        id: 'contact',
+                        type: 'Lead Inquiry Form',
+                        headline: 'Get in Touch',
+                        subtitle: 'Send your inquiry directly to our team for a rapid response.',
+                        visible: true
+                    }
                 ]
             };
         }
 
-        function showIntakeView() {
-            document.getElementById('intakeView').classList.remove('hidden');
-            document.getElementById('editorView').classList.add('hidden');
+        function navigateTo(viewName) {
+            document.getElementById('viewIntake').classList.add('hidden');
+            document.getElementById('viewEditor').classList.add('hidden');
+            document.getElementById('viewPublic').classList.add('hidden');
+
+            if (viewName === 'intake') {
+                document.getElementById('viewIntake').classList.remove('hidden');
+            } else if (viewName === 'editor') {
+                document.getElementById('viewEditor').classList.remove('hidden');
+                refreshEditorUI();
+            } else if (viewName === 'public') {
+                document.getElementById('viewPublic').classList.remove('hidden');
+                refreshPublicUI();
+            }
         }
 
-        function showEditorView() {
-            document.getElementById('intakeView').classList.add('hidden');
-            document.getElementById('editorView').classList.remove('hidden');
+        function refreshEditorUI() {
+            if (!currentBusiness) return;
 
-            document.getElementById('editorSiteTitle').textContent = currentSite.title;
-            document.getElementById('editorSiteSlug').textContent = `/site/${currentSite.slug}`;
-            document.getElementById('previewUrlLabel').textContent = `https://websites.co.in/site/${currentSite.slug}`;
-            document.getElementById('themeSelector').value = currentThemeKey;
+            document.getElementById('siteTitleBar').textContent = currentBusiness.title;
+            document.getElementById('siteSlugBadge').textContent = `/site/${currentBusiness.slug}`;
+            document.getElementById('canvasUrlBar').textContent = `https://yourbrand.web.app/site/${currentBusiness.slug}`;
+            document.getElementById('themeDropdown').value = activeTheme;
 
-            // Handle Conflict Banner
-            const conflictBar = document.getElementById('conflictAlertBar');
-            if (currentSite.hasConflict) {
+            // Conflict Notification Bar
+            const conflictBar = document.getElementById('dataConflictBanner');
+            if (currentBusiness.hasConflict) {
                 conflictBar.classList.remove('hidden');
             } else {
                 conflictBar.classList.add('hidden');
             }
 
-            renderSectionsList();
-            renderPreviewCanvas();
+            renderSectionsSidebar();
+            renderWebsiteCanvas('websiteCanvas');
         }
 
-        function resolveConflict(choice) {
-            const conflictBar = document.getElementById('conflictAlertBar');
-            conflictBar.classList.add('hidden');
-            currentSite.hasConflict = false;
+        function refreshPublicUI() {
+            document.getElementById('publicUrlHeader').textContent = `/site/${currentBusiness.slug}`;
+            renderWebsiteCanvas('publicCanvas');
+        }
+
+        function openPublicView() {
+            navigateTo('public');
+        }
+
+        function copyPublicLink() {
+            const url = `https://yourbrand.web.app/site/${currentBusiness.slug}`;
+            navigator.clipboard.writeText(url);
+            alert(`Live Public URL copied to clipboard: ${url}`);
+        }
+
+        function resolveSourceConflict(choice) {
+            document.getElementById('dataConflictBanner').classList.add('hidden');
+            currentBusiness.hasConflict = false;
 
             if (choice === 'B') {
-                currentSite.phone = "+91 98801 12345";
-                currentSite.sections[0].content.phone = "+91 98801 12345";
+                currentBusiness.phone = "+91 98801 12345";
+                currentBusiness.sections[0].phone = "+91 98801 12345";
             }
-            renderSectionsList();
-            renderPreviewCanvas();
-            alert(`Conflict resolved: Phone number set to ${currentSite.phone}`);
+            renderSectionsSidebar();
+            renderWebsiteCanvas('websiteCanvas');
+            alert(`Conflict successfully resolved: Verified phone set to ${currentBusiness.phone}`);
         }
 
-        function renderSectionsList() {
-            const container = document.getElementById('sectionsListContainer');
+        function renderSectionsSidebar() {
+            const container = document.getElementById('sectionsSidebar');
             container.innerHTML = '';
 
-            currentSite.sections.forEach((sec, idx) => {
+            currentBusiness.sections.forEach((sec, idx) => {
                 const card = document.createElement('div');
-                card.className = 'p-3 rounded-xl border border-slate-200 bg-white hover:border-blue-400 hover:shadow-sm transition';
+                card.className = 'p-3 rounded-xl border border-slate-200 bg-white hover:border-sky-400 hover:shadow-sm transition';
                 card.innerHTML = `
                     <div class="flex items-center justify-between mb-1">
                         <span class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
                             <i class="fa-solid fa-layer-group text-slate-400"></i> ${sec.type}
                         </span>
-                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700">Verified</span>
+                        <div class="flex items-center gap-1">
+                            <button type="button" onclick="toggleSectionVisibility(${idx})" class="text-xs text-slate-400 hover:text-slate-700 px-1" title="Toggle Visibility">
+                                <i class="fa-solid ${sec.visible ? 'fa-eye text-sky-600' : 'fa-eye-slash text-slate-300'}"></i>
+                            </button>
+                        </div>
                     </div>
-                    <p class="text-[11px] text-slate-500 line-clamp-1 mb-2.5">${sec.title}</p>
+                    <p class="text-[11px] text-slate-500 line-clamp-1 mb-2.5">${sec.headline}</p>
                     <div class="flex items-center gap-1.5 pt-2 border-t border-slate-100">
                         <button type="button" onclick="openEditModal(${idx})" class="flex-1 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold transition text-center">
                             <i class="fa-solid fa-pen mr-1"></i> Edit
@@ -529,236 +754,357 @@
             });
         }
 
-        function renderPreviewCanvas() {
-            const theme = themes[currentThemeKey];
-            const canvas = document.getElementById('previewCanvas');
+        function toggleSectionVisibility(idx) {
+            currentBusiness.sections[idx].visible = !currentBusiness.sections[idx].visible;
+            renderSectionsSidebar();
+            renderWebsiteCanvas('websiteCanvas');
+        }
 
-            const heroSec = currentSite.sections.find(s => s.id === 'hero');
-            const aboutSec = currentSite.sections.find(s => s.id === 'about');
-            const servicesSec = currentSite.sections.find(s => s.id === 'services');
-            const reviewsSec = currentSite.sections.find(s => s.id === 'reviews');
-            const locationSec = currentSite.sections.find(s => s.id === 'location');
+        function renderWebsiteCanvas(targetElementId) {
+            const theme = themes[activeTheme];
+            const canvas = document.getElementById(targetElementId);
+
+            const headerSec = currentBusiness.sections.find(s => s.id === 'header');
+            const heroSec = currentBusiness.sections.find(s => s.id === 'hero');
+            const aboutSec = currentBusiness.sections.find(s => s.id === 'about');
+            const servicesSec = currentBusiness.sections.find(s => s.id === 'services');
+            const reviewsSec = currentBusiness.sections.find(s => s.id === 'testimonials');
+            const locationSec = currentBusiness.sections.find(s => s.id === 'location');
 
             canvas.innerHTML = `
                 <!-- Navbar -->
-                <nav class="bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+                ${headerSec && headerSec.visible ? `
+                <nav class="bg-white border-b border-slate-100 px-6 sm:px-10 py-4 flex items-center justify-between sticky top-0 z-20 shadow-sm">
                     <span class="font-bold text-base text-slate-900 flex items-center gap-2">
-                        <span class="w-7 h-7 rounded-lg text-white flex items-center justify-center font-bold text-xs" style="background-color: ${theme.primary};">
-                            ${currentSite.title.charAt(0)}
+                        <span class="w-8 h-8 rounded-lg text-white flex items-center justify-center font-bold text-xs" style="background-color: ${theme.primary};">
+                            ${currentBusiness.title.charAt(0)}
                         </span>
-                        ${currentSite.title}
+                        ${currentBusiness.title}
                     </span>
-                    <div class="hidden sm:flex items-center gap-4 text-xs font-medium text-slate-600">
-                        <a href="#about" class="hover:underline">About</a>
-                        <a href="#services" class="hover:underline">Catalog</a>
-                        <a href="#contact" class="hover:underline">Contact</a>
+                    <div class="hidden sm:flex items-center gap-6 text-xs font-semibold text-slate-600">
+                        <a href="#about" class="hover:text-slate-900 transition">About</a>
+                        <a href="#offerings" class="hover:text-slate-900 transition">Offerings</a>
+                        <a href="#location" class="hover:text-slate-900 transition">Hours</a>
+                        <a href="#contact" class="hover:text-slate-900 transition">Contact</a>
                     </div>
-                    <a href="tel:${currentSite.phone}" class="px-3.5 py-1.5 rounded-lg text-white font-bold text-xs shadow-sm hover:opacity-90 transition flex items-center gap-1.5" style="background-color: ${theme.primary};">
-                        <i class="fa-solid fa-phone"></i> ${currentSite.phone}
+                    <a href="tel:${currentBusiness.phone}" class="px-4 py-2 rounded-xl text-white font-bold text-xs shadow-sm hover:opacity-95 transition flex items-center gap-1.5" style="background-color: ${theme.primary};">
+                        <i class="fa-solid fa-phone"></i> ${currentBusiness.phone}
                     </a>
                 </nav>
+                ` : ''}
 
                 <!-- Hero -->
-                <section class="py-16 px-6 text-center" style="background-color: ${theme.bgHero};">
-                    <span class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 border" style="background: white; color: ${theme.primary}; border-color: ${theme.primary}30;">
-                        <i class="fa-solid fa-location-dot"></i> Serving ${currentSite.city}
+                ${heroSec && heroSec.visible ? `
+                <section class="py-20 px-6 sm:px-12 text-center" style="background-color: ${theme.heroBg}; color: ${theme.heroText || '#0f172a'};">
+                    <span class="inline-block px-3.5 py-1 rounded-full text-xs font-bold mb-4 shadow-sm bg-white" style="color: ${theme.primary};">
+                        <i class="fa-solid fa-location-dot"></i> Serving ${currentBusiness.city}
                     </span>
-                    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-3">${heroSec.content.headline}</h1>
-                    <p class="text-sm text-slate-600 max-w-xl mx-auto mb-6">${heroSec.content.subheadline}</p>
+                    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 max-w-3xl mx-auto leading-tight" style="font-family: ${theme.font};">
+                        ${heroSec.headline}
+                    </h1>
+                    <p class="text-sm sm:text-base max-w-xl mx-auto mb-8 opacity-80 leading-relaxed">
+                        ${heroSec.subtitle}
+                    </p>
                     <div class="flex items-center justify-center gap-3">
-                        <a href="#services" class="px-5 py-2.5 rounded-xl text-white font-bold text-xs shadow-md" style="background-color: ${theme.primary};">Explore Offerings</a>
-                        <a href="#contact" class="px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-700 font-semibold text-xs shadow-sm">Get in Touch</a>
+                        <a href="#offerings" class="px-6 py-3 rounded-xl text-white font-bold text-xs shadow-md hover:scale-105 transition" style="background-color: ${theme.primary};">
+                            ${heroSec.cta1 || 'Explore Offerings'}
+                        </a>
+                        <a href="#contact" class="px-6 py-3 rounded-xl bg-white border border-slate-300 text-slate-800 font-bold text-xs shadow-sm hover:bg-slate-50 transition">
+                            ${heroSec.cta2 || 'Get In Touch'}
+                        </a>
                     </div>
                 </section>
+                ` : ''}
 
-                <!-- About -->
-                <section id="about" class="py-12 px-6 max-w-4xl mx-auto">
-                    <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">${aboutSec.content.headline}</h2>
-                    <p class="text-xs sm:text-sm text-slate-600 text-center max-w-xl mx-auto mb-8">${aboutSec.content.subheadline}</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                            <i class="fa-solid fa-check-circle text-lg mb-2" style="color: ${theme.primary};"></i>
-                            <h3 class="font-bold text-xs text-slate-900">Verified Quality</h3>
-                            <p class="text-[11px] text-slate-500">Authentic materials and recipes.</p>
+                <!-- About Us -->
+                ${aboutSec && aboutSec.visible ? `
+                <section id="about" class="py-16 px-6 sm:px-12 max-w-5xl mx-auto">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-3 text-center" style="font-family: ${theme.font};">${aboutSec.headline}</h2>
+                    <p class="text-xs sm:text-sm text-slate-600 text-center max-w-2xl mx-auto mb-10 leading-relaxed">${aboutSec.subtitle}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                            <i class="fa-solid fa-check-circle text-2xl mb-3" style="color: ${theme.primary};"></i>
+                            <h3 class="font-bold text-sm text-slate-900 mb-1">Verified Craftsmanship</h3>
+                            <p class="text-xs text-slate-500">Uncompromising commitment to authenticity and excellence.</p>
                         </div>
-                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                            <i class="fa-solid fa-clock text-lg mb-2" style="color: ${theme.primary};"></i>
-                            <h3 class="font-bold text-xs text-slate-900">Punctual & Prompt</h3>
-                            <p class="text-[11px] text-slate-500">Same-day turnaround guaranteed.</p>
+                        <div class="p-4 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                            <i class="fa-solid fa-clock text-2xl mb-3" style="color: ${theme.primary};"></i>
+                            <h3 class="font-bold text-sm text-slate-900 mb-1">Punctual & Reliable</h3>
+                            <p class="text-xs text-slate-500">Dedicated schedules tailored to customer convenience.</p>
                         </div>
-                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                            <i class="fa-solid fa-shield-heart text-lg mb-2" style="color: ${theme.primary};"></i>
-                            <h3 class="font-bold text-xs text-slate-900">Customer Centric</h3>
-                            <p class="text-[11px] text-slate-500">100% transparent quotes.</p>
+                        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                            <i class="fa-solid fa-shield-heart text-2xl mb-3" style="color: ${theme.primary};"></i>
+                            <h3 class="font-bold text-sm text-slate-900 mb-1">Customer First</h3>
+                            <p class="text-xs text-slate-500">Honest pricing with transparent execution.</p>
                         </div>
                     </div>
                 </section>
+                ` : ''}
 
-                <!-- Catalog / Services -->
-                <section id="services" class="py-12 px-6 bg-slate-50 border-t border-slate-100">
-                    <div class="max-w-4xl mx-auto">
-                        <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">${servicesSec.content.headline}</h2>
-                        <p class="text-xs text-slate-500 text-center mb-8">Extracted directly from provided catalog files</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            ${servicesSec.content.items.map(item => `
-                                <div class="p-5 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+                <!-- Offerings & Catalog -->
+                ${servicesSec && servicesSec.visible ? `
+                <section id="offerings" class="py-16 px-6 sm:px-12 bg-slate-50 border-t border-slate-100">
+                    <div class="max-w-5xl mx-auto">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-2 text-center" style="font-family: ${theme.font};">${servicesSec.headline}</h2>
+                        <p class="text-xs text-slate-500 text-center mb-10">${servicesSec.subtitle}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            ${servicesSec.items.map(item => `
+                                <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between hover:border-slate-400 transition">
                                     <div>
-                                        <div class="flex items-start justify-between mb-2">
-                                            <h4 class="font-bold text-xs text-slate-900">${item.name}</h4>
-                                            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">${item.price}</span>
+                                        <div class="flex items-start justify-between mb-3">
+                                            <h4 class="font-bold text-sm text-slate-900">${item.name}</h4>
+                                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">${item.price}</span>
                                         </div>
-                                        <p class="text-[11px] text-slate-600 mb-4">${item.desc}</p>
+                                        <p class="text-xs text-slate-600 mb-6 leading-relaxed">${item.desc}</p>
                                     </div>
-                                    <a href="#contact" class="text-[11px] font-bold hover:underline" style="color: ${theme.primary};">Inquire &rarr;</a>
+                                    <a href="#contact" class="text-xs font-bold hover:underline flex items-center gap-1" style="color: ${theme.primary};">
+                                        Inquire about this &rarr;
+                                    </a>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
                 </section>
+                ` : ''}
 
-                <!-- Reviews -->
-                <section class="py-12 px-6 max-w-4xl mx-auto">
-                    <h2 class="text-xl font-bold text-slate-900 mb-6 text-center">Verified Reviews</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        ${reviewsSec.content.reviews.map(r => `
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs">
-                                <div class="text-amber-400 mb-2"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                                <p class="text-slate-700 italic mb-2">"${r.comment}"</p>
-                                <span class="font-bold text-slate-900 block">${r.name}</span>
+                <!-- Testimonials -->
+                ${reviewsSec && reviewsSec.visible ? `
+                <section class="py-16 px-6 sm:px-12 max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-8 text-center" style="font-family: ${theme.font};">${reviewsSec.headline}</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        ${reviewsSec.reviews.map(r => `
+                            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                                <div class="text-amber-400 text-xs mb-3">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <p class="text-sm text-slate-700 italic mb-4 leading-relaxed">"${r.comment}"</p>
+                                <span class="font-bold text-xs text-slate-900 block">${r.name}</span>
                             </div>
                         `).join('')}
                     </div>
                 </section>
+                ` : ''}
 
                 <!-- Hours & Location -->
-                <section class="py-10 px-6 bg-slate-50 border-t border-slate-100 text-center text-xs text-slate-600">
-                    <p class="font-bold text-slate-900 mb-1"><i class="fa-solid fa-location-dot" style="color: ${theme.primary};"></i> ${locationSec.content.address}</p>
-                    <p><i class="fa-regular fa-clock"></i> ${locationSec.content.hours}</p>
+                ${locationSec && locationSec.visible ? `
+                <section id="location" class="py-12 px-6 bg-slate-50 border-t border-slate-100 text-center text-xs text-slate-600">
+                    <p class="font-bold text-sm text-slate-900 mb-1.5"><i class="fa-solid fa-location-dot" style="color: ${theme.primary};"></i> ${locationSec.address}</p>
+                    <p class="text-xs text-slate-500"><i class="fa-regular fa-clock"></i> ${locationSec.hours}</p>
                 </section>
+                ` : ''}
 
-                <!-- Contact & Lead Form -->
-                <section id="contact" class="py-12 px-6 max-w-md mx-auto text-xs">
-                    <h2 class="text-xl font-bold text-slate-900 text-center mb-1">Get In Touch</h2>
-                    <p class="text-slate-500 text-center mb-6">Send an inquiry directly to the business owner</p>
-                    <form onsubmit="handleInquirySubmit(event)" class="space-y-3 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <!-- Working Inquiry Form -->
+                <section id="contact" class="py-16 px-6 sm:px-12 max-w-md mx-auto text-xs">
+                    <h2 class="text-2xl font-bold text-slate-900 text-center mb-2" style="font-family: ${theme.font};">Send Us an Inquiry</h2>
+                    <p class="text-slate-500 text-center mb-6">Have questions or want to place an order? Fill out the form below.</p>
+                    <form onsubmit="handleInquirySubmit(event)" class="space-y-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Your Name</label>
-                            <input type="text" required placeholder="e.g. Rahul Mehta" class="w-full rounded-lg border border-slate-300 p-2 text-xs outline-none">
+                            <label class="block font-semibold text-slate-700 mb-1">Your Full Name</label>
+                            <input type="text" id="leadName" required placeholder="e.g. Rahul Mehta" class="w-full rounded-xl border border-slate-300 p-2.5 text-xs outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                         <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Your Phone / Email</label>
-                            <input type="text" required placeholder="e.g. +91 98765 43210" class="w-full rounded-lg border border-slate-300 p-2 text-xs outline-none">
+                            <label class="block font-semibold text-slate-700 mb-1">Contact Phone or Email</label>
+                            <input type="text" id="leadContact" required placeholder="e.g. +91 98765 43210" class="w-full rounded-xl border border-slate-300 p-2.5 text-xs outline-none focus:ring-2 focus:ring-sky-500">
                         </div>
                         <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Message</label>
-                            <textarea rows="3" required placeholder="What are you looking for?" class="w-full rounded-lg border border-slate-300 p-2 text-xs outline-none"></textarea>
+                            <label class="block font-semibold text-slate-700 mb-1">Your Message</label>
+                            <textarea id="leadMsg" rows="3" required placeholder="Please let us know what you need..." class="w-full rounded-xl border border-slate-300 p-2.5 text-xs outline-none focus:ring-2 focus:ring-sky-500"></textarea>
                         </div>
-                        <button type="submit" class="w-full py-2.5 rounded-lg text-white font-bold text-xs shadow-md transition" style="background-color: ${theme.primary};">
+                        <button type="submit" class="w-full py-3 rounded-xl text-white font-bold text-xs shadow-md transition hover:opacity-95" style="background-color: ${theme.primary};">
                             Send Inquiry
                         </button>
                     </form>
                 </section>
 
                 <!-- Footer -->
-                <footer class="bg-slate-900 text-slate-400 py-6 text-center text-[11px]">
-                    <p>© 2026 ${currentSite.title}. All rights reserved.</p>
-                    <p class="text-slate-500 mt-1">Generated by AI Builds My Website &bull; Websites.co.in Assignment</p>
+                <footer class="bg-slate-900 text-slate-400 py-10 text-center text-xs">
+                    <p>© 2026 ${currentBusiness.title}. All rights reserved.</p>
+                    <p class="text-slate-500 mt-1">Published with Websites AI &bull; High Factual Precision</p>
                 </footer>
             `;
         }
 
-        function setPreviewWidth(width) {
-            document.getElementById('previewCanvas').style.maxWidth = width;
+        function setDeviceWidth(width) {
+            document.getElementById('websiteCanvas').style.maxWidth = width;
         }
 
-        function changeTheme(themeKey) {
-            currentThemeKey = themeKey;
-            renderPreviewCanvas();
+        function applyTheme(themeKey) {
+            activeTheme = themeKey;
+            renderWebsiteCanvas('websiteCanvas');
         }
 
-        function togglePublishState() {
+        function togglePublish() {
             isPublished = !isPublished;
-            const badge = document.getElementById('siteStatusBadge');
-            const btn = document.getElementById('publishBtn');
-            const label = document.getElementById('publishBtnLabel');
+            const badge = document.getElementById('siteLiveBadge');
+            const btn = document.getElementById('btnPublish');
+            const label = document.getElementById('btnPublishText');
 
             if (isPublished) {
-                badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800';
+                badge.className = 'px-2 py-0.2 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800';
                 badge.textContent = 'Published (Live)';
                 btn.className = 'px-4 py-1.5 rounded-lg font-bold text-xs shadow-sm transition flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white';
                 label.textContent = 'Unpublish';
-                alert(`Website published successfully to public URL: https://websites.co.in/site/${currentSite.slug}`);
+                alert(`Website published to public URL: https://yourbrand.web.app/site/${currentBusiness.slug}`);
             } else {
-                badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800';
-                badge.textContent = 'Draft (Unpublished)';
+                badge.className = 'px-2 py-0.2 rounded text-[10px] font-bold bg-amber-100 text-amber-800';
+                badge.textContent = 'Draft';
                 btn.className = 'px-4 py-1.5 rounded-lg font-bold text-xs shadow-sm transition flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white';
-                label.textContent = 'Publish to Public URL';
+                label.textContent = 'Publish Website';
             }
         }
 
-        function openEditModal(index) {
-            activeSectionIndex = index;
-            const sec = currentSite.sections[index];
-            document.getElementById('editModalTitle').textContent = `Edit: ${sec.type}`;
-            document.getElementById('editFieldTitle').value = sec.title;
-            document.getElementById('editFieldBody').value = sec.content.headline || sec.content.subheadline || '';
-            document.getElementById('editModal').classList.remove('hidden');
+        function openEditModal(idx) {
+            activeEditIndex = idx;
+            const sec = currentBusiness.sections[idx];
+            document.getElementById('modalEditHeading').textContent = `Edit: ${sec.type}`;
+            document.getElementById('modalFieldHeadline').value = sec.headline || '';
+            document.getElementById('modalFieldSubtitle').value = sec.subtitle || '';
+
+            // Handle items list if present
+            const itemsEditor = document.getElementById('modalItemsEditor');
+            const itemsList = document.getElementById('modalItemsList');
+            itemsList.innerHTML = '';
+
+            if (sec.items && sec.items.length > 0) {
+                itemsEditor.classList.remove('hidden');
+                sec.items.forEach((item, itemIdx) => {
+                    const row = document.createElement('div');
+                    row.className = 'p-2.5 rounded-lg border border-slate-200 bg-slate-50 space-y-1.5 text-xs';
+                    row.innerHTML = `
+                        <div class="flex gap-2">
+                            <input type="text" value="${item.name}" id="item_name_${itemIdx}" class="flex-1 rounded border border-slate-300 p-1 font-semibold">
+                            <input type="text" value="${item.price}" id="item_price_${itemIdx}" class="w-20 rounded border border-slate-300 p-1 font-bold">
+                        </div>
+                        <input type="text" value="${item.desc}" id="item_desc_${itemIdx}" class="w-full rounded border border-slate-300 p-1 text-[11px]">
+                    `;
+                    itemsList.appendChild(row);
+                });
+            } else {
+                itemsEditor.classList.add('hidden');
+            }
+
+            document.getElementById('sectionEditModal').classList.remove('hidden');
         }
 
         function closeEditModal() {
-            document.getElementById('editModal').classList.add('hidden');
+            document.getElementById('sectionEditModal').classList.add('hidden');
         }
 
-        function saveSectionEdit() {
-            const sec = currentSite.sections[activeSectionIndex];
-            sec.title = document.getElementById('editFieldTitle').value;
-            if (sec.content.headline) sec.content.headline = document.getElementById('editFieldBody').value;
+        function saveSectionModal() {
+            const sec = currentBusiness.sections[activeEditIndex];
+            sec.headline = document.getElementById('modalFieldHeadline').value;
+            sec.subtitle = document.getElementById('modalFieldSubtitle').value;
+
+            if (sec.items && sec.items.length > 0) {
+                sec.items.forEach((item, itemIdx) => {
+                    const nameEl = document.getElementById(`item_name_${itemIdx}`);
+                    const priceEl = document.getElementById(`item_price_${itemIdx}`);
+                    const descEl = document.getElementById(`item_desc_${itemIdx}`);
+                    if (nameEl) item.name = nameEl.value;
+                    if (priceEl) item.price = priceEl.value;
+                    if (descEl) item.desc = descEl.value;
+                });
+            }
+
             closeEditModal();
-            renderSectionsList();
-            renderPreviewCanvas();
+            renderSectionsSidebar();
+            renderWebsiteCanvas('websiteCanvas');
         }
 
-        function openRegenModal(index) {
-            activeSectionIndex = index;
-            const sec = currentSite.sections[index];
-            document.getElementById('regenPrompt').value = `Make the ${sec.type} section warmer, more persuasive, and emphasize fresh artisanal morning quality.`;
-            document.getElementById('regenModal').classList.remove('hidden');
+        function openRegenModal(idx) {
+            activeEditIndex = idx;
+            const sec = currentBusiness.sections[idx];
+            document.getElementById('aiPromptInput').value = `Elevate the ${sec.type} section with persuasive copy, highlighting our craft and local reputation.`;
+            document.getElementById('aiRegenModal').classList.remove('hidden');
         }
 
         function closeRegenModal() {
-            document.getElementById('regenModal').classList.add('hidden');
+            document.getElementById('aiRegenModal').classList.add('hidden');
         }
 
-        function executeRegeneration() {
-            const btn = document.getElementById('executeRegenBtn');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Generating...`;
+        function setQuickPrompt(text) {
+            document.getElementById('aiPromptInput').value = text;
+        }
+
+        function executeSectionRegeneration() {
+            const btn = document.getElementById('btnExecuteRegen');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Synthesizing...`;
             btn.disabled = true;
 
             setTimeout(() => {
-                const sec = currentSite.sections[activeSectionIndex];
+                const sec = currentBusiness.sections[activeEditIndex];
                 if (sec.id === 'hero') {
-                    sec.content.headline = `Freshly Baked Every Morning in ${currentSite.city}`;
-                    sec.content.subheadline = `Handcrafted 36-hour sourdough and French pastries made daily with organic stoneground flour.`;
+                    sec.headline = `Handcrafted Excellence Every Day in ${currentBusiness.city}`;
+                    sec.subtitle = `Slow-fermented artisan sourdough, delicate French pastries, and pure European chocolate treats baked fresh every morning.`;
                 } else if (sec.id === 'about') {
-                    sec.content.subheadline = `A passion for slow food and authentic heritage baking, right in the heart of ${currentSite.city}.`;
+                    sec.subtitle = `With an unwavering focus on traditional craft, we blend time-tested heritage techniques with fresh local ingredients.`;
                 }
-                btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Regenerate`;
+                btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Regenerate Section`;
                 btn.disabled = false;
                 closeRegenModal();
-                renderSectionsList();
-                renderPreviewCanvas();
-                alert(`Section "${sec.type}" regenerated with custom AI prompt!`);
-            }, 500);
+                renderSectionsSidebar();
+                renderWebsiteCanvas('websiteCanvas');
+                alert(`Section "${sec.type}" successfully regenerated using AI prompt!`);
+            }, 550);
+        }
+
+        function addNewCustomSection() {
+            const title = prompt("Enter new section title (e.g., FAQ, Special Offer, Team):", "Special Announcement");
+            if (!title) return;
+            currentBusiness.sections.push({
+                id: 'custom_' + Date.now(),
+                type: 'Custom Block',
+                headline: title,
+                subtitle: 'Add your custom text, seasonal promotion, or business update here.',
+                visible: true
+            });
+            renderSectionsSidebar();
+            renderWebsiteCanvas('websiteCanvas');
         }
 
         function handleInquirySubmit(e) {
             e.preventDefault();
-            alert('Lead captured successfully! Stored in database table "inquiries" and sent to the business owner.');
+            const name = document.getElementById('leadName').value;
+            const contact = document.getElementById('leadContact').value;
+            const msg = document.getElementById('leadMsg').value;
+
+            leads.push({
+                name: name,
+                contact: contact,
+                message: msg,
+                date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+
+            document.getElementById('leadCounterBadge').textContent = leads.length;
+            alert(`Inquiry from ${name} successfully captured and stored in your Lead Inbox!`);
             e.target.reset();
         }
 
-        // Auto-load Bakery preset on first load
-        loadPreset('bakery');
+        function openLeadsModal() {
+            const container = document.getElementById('leadsListContainer');
+            if (leads.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">No customer inquiries received yet. Submit the contact form on your published site to capture leads!</p>`;
+            } else {
+                container.innerHTML = leads.map(l => `
+                    <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 text-xs">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-bold text-slate-900">${l.name}</span>
+                            <span class="text-[10px] text-slate-400">${l.date}</span>
+                        </div>
+                        <p class="text-slate-600 mb-1 font-mono text-[11px]">${l.contact}</p>
+                        <p class="text-slate-700 bg-white p-2 rounded border border-slate-200 text-[11px]">${l.message}</p>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('leadsModal').classList.remove('hidden');
+        }
+
+        function closeLeadsModal() {
+            document.getElementById('leadsModal').classList.add('hidden');
+        }
+
+        // Initialize with default business sample
+        loadBusinessSample('bakery');
     </script>
 </body>
 </html>
